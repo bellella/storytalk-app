@@ -1,0 +1,59 @@
+/* 기본 설정 */
+.custom-scroll {
+  scrollbar-width: thin;
+  --scroll-thumb-color: var(--color-primary-300); /* 기본 thumb 색 */
+}
+
+/* ===================================
+   ALWAYS MODE
+=================================== */
+
+.scroll-always::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-always::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-always::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb-color);
+  border-radius: 4px;
+}
+
+/* Firefox */
+.scroll-always {
+  scrollbar-color: var(--scroll-thumb-color) transparent;
+}
+
+/* ===================================
+   HOVER MODE
+=================================== */
+
+.scroll-hover::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 기본: thumb 투명 */
+.scroll-hover::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+/* hover 시 thumb 색 등장 */
+.scroll-hover:hover::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb-color);
+}
+
+/* Firefox hover 대응 */
+.scroll-hover {
+  scrollbar-color: transparent transparent;
+}
+
+.scroll-hover:hover {
+  scrollbar-color: var(--scroll-thumb-color) transparent;
+}
