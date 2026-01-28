@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { ReactNode } from 'react';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../ui/button';
 
 type FloatingButtonProps = {
@@ -15,10 +15,7 @@ export function FloatingButton({ children, onPress }: FloatingButtonProps) {
       className="absolute bottom-4 left-0 right-0 items-center pb-4"
     >
       <View className="w-full max-w-[600px] px-2">
-        <Button
-          action="primary"
-          onPress={onPress}
-        >
+        <Button action="primary" onPress={onPress}>
           {children}
         </Button>
       </View>

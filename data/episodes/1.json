@@ -1,0 +1,521 @@
+{
+  "seriesTitle": "Riley Cyrus: Star Life",
+  "episode": 1,
+  "episodeTitle": "The Audition Room",
+  "level": "Adult Conversation - Beginner to Intermediate",
+  "estimatedDuration": "3-4 minutes",
+  "characters": [
+    {
+      "id": "riley",
+      "name": "Riley",
+      "description": "A witty, energetic girl with average looks but standout charm.",
+      "color": "bg-pink-500",
+      "image": "https://mina-test-images.s3.ap-northeast-2.amazonaws.com/riley.png"
+    },
+    {
+      "id": "manager",
+      "name": "Manager",
+      "description": "A strict but secretly supportive audition coordinator.",
+      "color": "bg-gray-700"
+    },
+    {
+      "id": "hailey_friend",
+      "name": "Mia",
+      "description": "Hailey’s hometown friend. Warm, practical, encouraging.",
+      "color": "bg-orange-400",
+      "image": "https://mina-test-images.s3.ap-northeast-2.amazonaws.com/cathy.png"
+    },
+    {
+      "id": "serina",
+      "name": "Serina",
+      "description": "A rival singer. Confident, glamorous, intimidating.",
+      "color": "bg-purple-600"
+    },
+    {
+      "id": "prince",
+      "name": "Prince",
+      "description": "Riley’s favorite male superstar and audition judge.",
+      "color": "bg-blue-600",
+      "image": "https://mina-test-images.s3.ap-northeast-2.amazonaws.com/prince.png"
+    },
+    {
+      "id": "judge_female",
+      "name": "Judge Clara",
+      "description": "A kind but sharp female judge who sees potential.",
+      "color": "bg-emerald-600"
+    }
+  ],
+  "scenes": [
+    {
+      "sceneIndex": 1,
+      "sceneTitle": "Waiting Room Panic",
+      "backgroundImage": "audition_waiting_room_day.jpg",
+      "bgm": "soft_nervous_loop.mp3",
+      "sceneDescription": "Riley sits in a crowded audition waiting room, clutching her audition number. People around her warm up their voices. Her leg won’t stop shaking.",
+      "events": [
+        {
+          "type": "narration",
+          "text": "Riley’s heart is beating way too fast. The audition room feels colder than it should."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Okay, Riley. You can do this. Or… you could pretend you forgot your shoes and go home."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Honestly, my parents’ couch is calling me louder than this audition room."
+        },
+        {
+          "type": "image_popup",
+          "image": "phone_home_screen.jpg",
+          "caption": "Riley’s phone wallpaper: a cozy photo of her parents’ living room."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Maybe I should just text them. ‘Surprise! I’m back already.’"
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "Hey. You look like someone who’s about to faint or flee. Which one is it?"
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Option C. Dramatically disappear and become a librarian."
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "Relax. You didn’t come all this way to organize books."
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "What’s your name?"
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Riley. Future ex-audition contestant."
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "I’m Mia. And trust me — you already look braver than you feel."
+        },
+        {
+          "type": "narration",
+          "text": "Before Riley can reply, a glamorous girl walks past them, surrounded by whispers."
+        },
+        {
+          "type": "image_popup",
+          "image": "serina_entrance.jpg",
+          "caption": "Serina, famous indie singer with a confident smile."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Wow. She looks like she was born on a spotlight."
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "That’s Serina. She’s already semi-famous. Try not to compare."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Too late. I just lost the comparison battle and the war."
+        },
+        {
+          "type": "narration",
+          "text": "Riley glances toward the audition room door — and freezes."
+        },
+        {
+          "type": "image_popup",
+          "image": "judge_panel_silhouette.jpg",
+          "caption": "Three judges sit behind a long desk."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Wait… is that… Prince?"
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "Yeah. Surprise judge today."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Nope. Absolutely not. I refuse to embarrass myself in front of my favorite singer."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "I’m leaving. I’m walking. I’m—"
+        },
+        {
+          "type": "dialogue",
+          "character": "manager",
+          "text": "Contestant number 47. Riley Cyrus. You’re up."
+        },
+        { "type": "narration", "text": "Riley’s soul briefly exits her body." },
+        { "type": "scene_transition", "toSceneIndex": 2 }
+      ]
+    },
+    {
+      "sceneIndex": 2,
+      "sceneTitle": "The Walk of Doom",
+      "backgroundImage": "audition_hallway_dim.jpg",
+      "bgm": "heartbeat_tension.mp3",
+      "sceneDescription": "Riley walks down a long hallway toward the audition room, feeling like she’s walking into a final boss fight.",
+      "events": [
+        {
+          "type": "narration",
+          "text": "Each step feels louder than the last. Riley considers fainting as a strategic escape plan."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Okay, brain, listen. If I pass out, technically I tried."
+        },
+        {
+          "type": "dialogue",
+          "character": "manager",
+          "text": "You’ll be fine. Just walk straight and don’t trip."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Wow. Inspirational."
+        },
+        {
+          "type": "image_popup",
+          "image": "riley_peeking_room.jpg",
+          "caption": "Riley peeks through the audition room door."
+        },
+        {
+          "type": "narration",
+          "text": "Inside, three judges sit behind a table. Prince leans back casually, scrolling on his tablet."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Great. My hero. My downfall."
+        },
+        { "type": "dialogue", "character": "manager", "text": "Go get them." },
+        {
+          "type": "narration",
+          "text": "The door opens. There is no turning back."
+        },
+        { "type": "scene_transition", "toSceneIndex": 3 }
+      ]
+    },
+    {
+      "sceneIndex": 3,
+      "sceneTitle": "The Brutal Review",
+      "backgroundImage": "audition_room_stage_lights.jpg",
+      "bgm": "light_stage_tension.mp3",
+      "sceneDescription": "Riley stands alone under bright lights, facing the judges’ table.",
+      "events": [
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "Hello. Please introduce yourself."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Hi, I’m Riley. I’m nervous, underprepared, and extremely aware that I’m sweating."
+        },
+        {
+          "type": "narration",
+          "text": "Prince raises an eyebrow. Judge Clara smiles slightly."
+        },
+        {
+          "type": "dialogue",
+          "character": "prince",
+          "text": "Confidence is… refreshing. What will you perform?"
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "An original song. And possibly a panic attack, depending on how this goes."
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "Take your time."
+        },
+        {
+          "type": "narration",
+          "text": "Riley closes her eyes and starts singing. Her voice shakes at first, but slowly steadies."
+        },
+        {
+          "type": "image_popup",
+          "image": "riley_singing_spotlight.jpg",
+          "caption": "Riley sings under the spotlight, eyes closed."
+        },
+        {
+          "type": "narration",
+          "text": "When she finishes, the room is quiet."
+        },
+        {
+          "type": "dialogue",
+          "character": "prince",
+          "text": "Your pitch control is unstable. Your tone lacks polish. Honestly… this isn’t ready."
+        },
+        {
+          "type": "narration",
+          "text": "Each word feels like a tiny punch to Riley’s chest."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Wow. That hurt more than my last breakup. And that involved crying in public."
+        },
+        {
+          "type": "narration",
+          "text": "Prince blinks, surprised. Judge Clara laughs quietly."
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "You’re honest. I like that. And your emotion felt real."
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "You’re not perfect — but you’re interesting."
+        },
+        {
+          "type": "dialogue",
+          "character": "prince",
+          "text": "Interesting doesn’t win competitions."
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "Neither does fear. And she sang anyway."
+        },
+        { "type": "narration", "text": "Riley grips her hands, waiting." },
+        { "type": "scene_transition", "toSceneIndex": 4 }
+      ]
+    },
+    {
+      "sceneIndex": 4,
+      "sceneTitle": "Unexpected Yes",
+      "backgroundImage": "audition_room_soft_light.jpg",
+      "bgm": "hopeful_soft_piano.mp3",
+      "sceneDescription": "The judges whisper among themselves. Riley tries not to pass out.",
+      "events": [
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "Riley, you lack training — but you have presence. And that’s rare."
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "I’d like to see what you can do with coaching."
+        },
+        {
+          "type": "dialogue",
+          "character": "prince",
+          "text": "I still don’t think she’s ready."
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "Then let the next round decide."
+        },
+        { "type": "narration", "text": "The judges turn back to Riley." },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "Congratulations. You’re through to the first round."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Wait. Sorry. Can you repeat that slower so my brain can process joy?"
+        },
+        {
+          "type": "dialogue",
+          "character": "judge_female",
+          "text": "You passed."
+        },
+        { "type": "dialogue", "character": "riley", "text": "I PASSED?" },
+        {
+          "type": "narration",
+          "text": "Riley nearly drops her audition number."
+        },
+        {
+          "type": "dialogue",
+          "character": "prince",
+          "text": "Don’t get comfortable. The next round will be harder."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Great. I love emotional threats. Keeps life exciting."
+        },
+        { "type": "narration", "text": "Prince hides a smile." },
+        { "type": "scene_transition", "toSceneIndex": 5 }
+      ]
+    },
+    {
+      "sceneIndex": 5,
+      "sceneTitle": "A New Beginning",
+      "backgroundImage": "audition_hallway_bright.jpg",
+      "bgm": "light_pop_ending.mp3",
+      "sceneDescription": "Riley walks out of the audition room, stunned.",
+      "events": [
+        { "type": "dialogue", "character": "hailey_friend", "text": "Well?" },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "I survived. Emotionally injured, but alive."
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "That’s not an answer."
+        },
+        { "type": "dialogue", "character": "riley", "text": "I passed." },
+        { "type": "dialogue", "character": "hailey_friend", "text": "WHAT?!" },
+        {
+          "type": "narration",
+          "text": "Mia grabs Riley’s shoulders and shakes her."
+        },
+        {
+          "type": "dialogue",
+          "character": "hailey_friend",
+          "text": "See? You didn’t die."
+        },
+        {
+          "type": "narration",
+          "text": "Serina walks past them, expression unreadable."
+        },
+        {
+          "type": "dialogue",
+          "character": "serina",
+          "text": "Beginner’s luck."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Maybe. But I’ll take it."
+        },
+        {
+          "type": "narration",
+          "text": "Riley looks back at the audition room door, her heart still racing — but now, with excitement instead of fear."
+        },
+        {
+          "type": "dialogue",
+          "character": "riley",
+          "text": "Okay, Riley. Don’t mess this up."
+        },
+        { "type": "narration", "text": "This is only the beginning." }
+      ]
+    }
+  ],
+  "postEpisode": {
+    "reviewSection": {
+      "title": "Key Lines Review",
+      "lines": [
+        {
+          "speaker": "Riley",
+          "text": "Honestly, my parents’ couch is calling me louder than this audition room.",
+          "focus": ["casual expressions", "metaphor"]
+        },
+        {
+          "speaker": "Prince",
+          "text": "Your pitch control is unstable. Your tone lacks polish.",
+          "focus": ["music vocabulary", "professional feedback"]
+        },
+        {
+          "speaker": "Judge Clara",
+          "text": "You’re not perfect — but you’re interesting.",
+          "focus": ["encouragement expressions"]
+        },
+        {
+          "speaker": "Riley",
+          "text": "I love emotional threats. Keeps life exciting.",
+          "focus": ["sarcasm", "humor tone"]
+        }
+      ]
+    },
+    "quizSection": {
+      "readingComprehension": [
+        {
+          "id": "rc1",
+          "question": "Why did Riley almost leave before her audition?",
+          "options": [
+            "She forgot her lyrics",
+            "She was too nervous and wanted to go home",
+            "She didn’t like the judges",
+            "She felt sick"
+          ],
+          "answer": 1
+        },
+        {
+          "id": "rc2",
+          "question": "What did Prince criticize about Riley’s performance?",
+          "options": [
+            "Her outfit",
+            "Her confidence",
+            "Her pitch and tone",
+            "Her song choice"
+          ],
+          "answer": 2
+        }
+      ],
+      "vocabulary": [
+        {
+          "id": "v1",
+          "question": "What does 'polish' most closely mean in this context?",
+          "sentence": "Your tone lacks polish.",
+          "options": ["Shine", "Finish or refinement", "Speed", "Volume"],
+          "answer": 1
+        },
+        {
+          "id": "v2",
+          "question": "What does 'beginner’s luck' mean?",
+          "options": [
+            "Winning because of experience",
+            "Winning because of cheating",
+            "Unexpected success on the first try",
+            "Winning after many failures"
+          ],
+          "answer": 2
+        }
+      ],
+      "scriptPractice": [
+        {
+          "id": "s1",
+          "question": "Choose the best line to complete the dialogue:\n\nPrince: \"Your pitch control is unstable.\"\nRiley: \"Wow. That hurt more than my last breakup. And that involved ___ in public.\"",
+          "options": ["laughing", "singing", "crying", "dancing"],
+          "answer": 2
+        },
+        {
+          "id": "s2",
+          "question": "Choose the best response:\n\nJudge Clara: \"You’re not perfect — but you’re interesting.\"\nRiley: \"___\"",
+          "options": [
+            "I disagree strongly.",
+            "Thank you. I’ll work harder.",
+            "That’s not my problem.",
+            "You’re wrong."
+          ],
+          "answer": 1
+        }
+      ]
+    }
+  }
+}

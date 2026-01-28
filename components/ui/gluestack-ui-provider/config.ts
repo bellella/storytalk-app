@@ -1,6 +1,7 @@
-"use client";
-import { ColorVariables } from "@/constants/color_variables";
-import { vars } from "nativewind";
+'use client';
+
+import { vars } from 'nativewind';
+import { ColorVariables } from '@/theme/colors.generated';
 
 export const config = {
   light: vars(ColorVariables.light),

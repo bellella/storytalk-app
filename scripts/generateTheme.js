@@ -58,51 +58,6 @@ function camelToKebab(s) {
   return s.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
-// ---------- HEX -> OKLCH raw ("L% C h") ----------
-function srgbToLinear(c255) {
-  const cs = c255 / 255;
-  return cs <= 0.04045 ? cs / 12.92 : Math.pow((cs + 0.055) / 1.055, 2.4);
-}
-
-function rgbToOklab(r, g, b) {
-  const lr = srgbToLinear(r);
-  const lg = srgbToLinear(g);
-  const lb = srgbToLinear(b);
-
-  const l = 0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb;
-  const m = 0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb;
-  const s = 0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb;
-
-  const l_ = Math.cbrt(l);
-  const m_ = Math.cbrt(m);
-  const s_ = Math.cbrt(s);
-
-  return {
-    L: 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_,
-    a: 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_,
-    b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_,
-  };
-}
-
-function oklabToOklch(L, a, b) {
-  const C = Math.sqrt(a * a + b * b);
-  let h = Math.atan2(b, a) * (180 / Math.PI);
-  if (h < 0) h += 360;
-  return { L, C, h };
-}
-
-function hexToOklchRaw(hex) {
-  const h = hex.slice(1);
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-
-  const lab = rgbToOklab(r, g, b);
-  const lch = oklabToOklch(lab.L, lab.a, lab.b);
-
-  return `${(lch.L * 100).toFixed(3)}% ${lch.C.toFixed(5)} ${lch.h.toFixed(2)}`;
-}
-
 // ---------- build Colors (schemes only, ALL keys, HEX) ----------
 function buildColorsFromSchemes(schemes) {
   const light = schemes.light;
@@ -129,7 +84,7 @@ function buildColorsFromSchemes(schemes) {
   };
 }
 
-// ---------- build ColorVariables (schemes ALL keys + palettes ALL mapped to 0/50/.../950, RAW OKLCH) ----------
+// ---------- build ColorVariables (schemes ALL keys + palettes ALL mapped to 0/50/.../950, HEX) ----------
 function buildVariables(schemes, palettes) {
   const light = schemes.light;
   const dark = schemes.dark;
@@ -138,17 +93,17 @@ function buildVariables(schemes, palettes) {
   const varsLight = {};
   const varsDark = {};
 
-  // (A) schemes -> --color-<kebab(key)> = RAW OKLCH
+  // (A) schemes -> --color-<kebab(key)> = HEX
   for (const [k, hex] of Object.entries(light)) {
     assertHex(hex, `schemes.light.${k}`);
-    varsLight[`--color-${camelToKebab(k)}`] = hexToOklchRaw(hex);
+    varsLight[`--color-${camelToKebab(k)}`] = hex;
   }
   for (const [k, hex] of Object.entries(dark)) {
     assertHex(hex, `schemes.dark.${k}`);
-    varsDark[`--color-${camelToKebab(k)}`] = hexToOklchRaw(hex);
+    varsDark[`--color-${camelToKebab(k)}`] = hex;
   }
 
-  // (B) palettes.* -> --color-<paletteName>-<0|50|...|950> = RAW OKLCH
+  // (B) palettes.* -> --color-<paletteName>-<0|50|...|950> = HEX
   if (!palettes || typeof palettes !== "object") {
     throw new Error("Missing palettes object in Material JSON");
   }
@@ -168,12 +123,11 @@ function buildVariables(schemes, palettes) {
       }
 
       assertHex(hex, `palettes.${paletteName}.${materialKey}`);
-      const raw = hexToOklchRaw(hex);
 
       const varName = `--color-${paletteName}-${twStep}`;
       // palettes는 보통 1세트라 light/dark 동일값으로 등록 (원하면 나중에 분리 가능)
-      varsLight[varName] = raw;
-      varsDark[varName] = raw;
+      varsLight[varName] = hex;
+      varsDark[varName] = hex;
     }
   }
 

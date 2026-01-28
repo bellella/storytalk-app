@@ -34,6 +34,8 @@ export function CustomScrollView({
       }}
       contentContainerStyle={{
         minHeight: isFullPage ? '100%' : undefined,
+        alignItems: 'center',
+        width: '100%',
       }}
       showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
       showsVerticalScrollIndicator={true}

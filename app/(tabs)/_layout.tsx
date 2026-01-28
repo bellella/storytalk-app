@@ -1,70 +1,107 @@
 import { Tabs } from 'expo-router';
-import { Home, MessageCircle, Settings, Users } from 'lucide-react-native';
+import {
+  Home,
+  LucideIcon,
+  MessageCircle,
+  Settings,
+  Users,
+} from 'lucide-react-native';
 import React from 'react';
 import { HapticTab } from '@/components/haptic-tab';
 import { Icon } from '@/components/ui/icon';
-import { useColors } from '@/lib/hooks/theme/useColors';
+import { Text } from '@/components/ui/text';
+import { View } from '@/components/ui/view';
+
+type TabIconProps = {
+  icon: LucideIcon;
+  label: string;
+  focused: boolean;
+};
+
+function TabIcon({ icon, label, focused }: TabIconProps) {
+  return (
+    <View className="items-center gap-1">
+      <View
+        className={`rounded-2xl p-3 ${
+          focused ? 'bg-primary shadow-primary shadow-lg' : ''
+        }`}
+      >
+        <Icon
+          as={icon}
+          size="lg"
+          className={focused ? 'text-white' : 'text-gray-400'}
+        />
+      </View>
+      <Text
+        className={`mt-1 text-[10px] font-bold ${
+          focused ? 'text-primary' : 'text-gray-400'
+        }`}
+      >
+        {label}
+      </Text>
+    </View>
+  );
+}
 
 export default function TabLayout() {
-  const { colors } = useColors();
-  const iconColor = colors.primary;
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: iconColor,
         headerShown: false,
         tabBarButton: HapticTab,
+        tabBarStyle: {
+          position: 'absolute',
+          height: 96,
+          borderTopWidth: 1,
+          borderTopColor: '#F1F1F1',
+          backgroundColor: 'rgba(255,255,255,0.9)',
+        },
+        tabBarLabelStyle: { display: 'none' },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => (
-            <Icon as={Home} size="xl" style={{ color }} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon={Home} label="Home" focused={focused} />
           ),
         }}
       />
+
       <Tabs.Screen
         name="chats"
         options={{
-          title: 'Chats',
-          tabBarIcon: ({ color }) => (
-            <Icon as={MessageCircle} size="xl" style={{ color }} />
+          title: 'Chat',
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon={MessageCircle} label="Chat" focused={focused} />
           ),
         }}
       />
+
       <Tabs.Screen
         name="friends"
         options={{
           title: 'Friends',
-          tabBarIcon: ({ color }) => (
-            <Icon as={Users} size="xl" style={{ color }} />
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon={Users} label="Friends" focused={focused} />
           ),
         }}
       />
+
       <Tabs.Screen
-        name="settings"
+        name="user"
         options={{
-          title: 'Settings',
-          tabBarIcon: ({ color }) => (
-            <Icon as={Settings} size="xl" style={{ color }} />
+          title: 'My Page',
+          tabBarIcon: ({ focused }) => (
+            <TabIcon icon={Settings} label="My Page" focused={focused} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="login"
-        options={{
-          href: null,
-          title: 'login',
-        }}
-      />
+
+      {/* Hidden Routes */}
+      <Tabs.Screen name="login" options={{ href: null }} />
+      <Tabs.Screen name="settings" options={{ href: null }} />
     </Tabs>
   );
 }

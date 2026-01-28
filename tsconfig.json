@@ -2,16 +2,11 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-native",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "#/*": [
-        "./assets/*"
-      ],
-      "tailwind.config": [
-        "./tailwind.config.js"
-      ]
+      "@/*": ["./*"],
+      "#/*": ["./assets/*"],
+      "tailwind.config": ["./tailwind.config.js"]
     }
   },
   "include": [

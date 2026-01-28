@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AppHeader } from '@/components/app/app-container/AppHeader';
 import { CustomScrollView } from '@/components/common/CustomScrollView';
@@ -33,41 +34,37 @@ export function AppContainer({
   children,
 }: AppContainerProps) {
   return (
-    <Box className="bg-background flex-1">
+    <View className="bg-background flex-1">
       <AppHeader
         title={headerTitle}
         left={headerLeft}
         right={headerRight}
         showBackButton={showBackButton}
         showLogo={showHeaderLogo}
-        showCart={showHeaderCart}
         showSearch={showHeaderSearch}
       />
       <Box className="w-screen flex-1 items-center">
         {disableScroll ? (
-          <Box
-            className={cn(
-              'w-full max-w-[600px] flex-1',
-              hasFloatButton ? 'pb-20' : ''
-            )}
-          >
+          <Box className={cn('w-full flex-1', hasFloatButton ? 'pb-20' : '')}>
             {children}
           </Box>
         ) : (
           <CustomScrollView
-            className={cn('w-full max-w-[600px]')}
+            className={cn('w-full')}
             scrollVisible="always"
             isFullPage={true}
           >
-            <SafeAreaView
-              edges={['bottom']}
-              className={cn('w-full flex-1', hasFloatButton ? 'mb-20' : '')}
+            <View
+              className={cn(
+                'w-full max-w-[600px]',
+                hasFloatButton ? 'mb-20' : ''
+              )}
             >
               {children}
-            </SafeAreaView>
+            </View>
           </CustomScrollView>
         )}
       </Box>
-    </Box>
+    </View>
   );
 }

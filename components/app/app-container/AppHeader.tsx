@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
-import { Image, useColorScheme, View } from 'react-native';
-import { Box } from '@/components/ui/box';
+import { ArrowLeft, Moon, Star, User } from 'lucide-react-native';
+import { View } from 'react-native';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
 import { useColors } from '@/lib/hooks/theme/useColors';
@@ -25,7 +25,7 @@ export function AppHeader({
 }: AppHeaderProps) {
   const router = useRouter();
   const { colors } = useColors();
-  const iconColor = colors.primary;
+  const iconColor = colors.onBackground;
 
   const handleBack = () => {
     if (router.canGoBack()) {
@@ -42,26 +42,22 @@ export function AppHeader({
           {left}
           {showBackButton && (
             <Pressable onPress={handleBack}>
-              <Ionicons name="chevron-back" size={20} color={iconColor} />
+              <ArrowLeft size={20} color={iconColor} />
             </Pressable>
           )}
           <View />
           {showLogo ? (
-            <Box
-              className="h-7"
-              style={{
-                aspectRatio: 5 / 1,
-              }}
-            >
-              <Image
-                source={require('#/images/logo.png')}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  resizeMode: 'contain',
-                }}
-              />
-            </Box>
+            <View className="flex-row items-center gap-2">
+              <Text className="text-lg font-black uppercase tracking-[0.2em] text-[#3F414E]">
+                Story
+              </Text>
+              <View className="h-8 w-8 items-center justify-center rounded-xl bg-[#8E97FD]">
+                <Moon size={16} color="#fff" fill="#fff" />
+              </View>
+              <Text className="text-lg font-black uppercase tracking-[0.2em] text-[#3F414E]">
+                Talk
+              </Text>
+            </View>
           ) : null}
         </View>
         <View className="flex-1">
@@ -73,6 +69,8 @@ export function AppHeader({
         </View>
         <View className="w-1/4 flex-row items-center justify-end gap-4">
           {right}
+          <Star size={20} color="#facc15" />
+          <User size={20} />
           {showSearch && (
             <Link href="/">
               <Ionicons name="search" size={20} color={iconColor} />
