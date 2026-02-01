@@ -5,10 +5,12 @@
  * The API description
  * OpenAPI spec version: 1.0
  */
+import type { UserEpisodeDto } from './userEpisodeDto';
 
 export type StoryDetailDtoEpisodesItem = {
   id: number;
   title: string;
   order: number;
   duration: string;
+  userEpisode?: UserEpisodeDto;
 };

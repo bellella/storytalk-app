@@ -70,7 +70,9 @@ export function AppHeader({
         <View className="w-1/4 flex-row items-center justify-end gap-4">
           {right}
           <Star size={20} color="#facc15" />
-          <User size={20} />
+          <Link href="/auth/login">
+            <User size={20} color={iconColor} />
+          </Link>
           {showSearch && (
             <Link href="/">
               <Ionicons name="search" size={20} color={iconColor} />

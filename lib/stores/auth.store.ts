@@ -1,49 +1,33 @@
-import { create } from "zustand";
-import { storage } from "../utils/storage";
-import { User } from "@/types/user.type";
+import { create } from 'zustand';
+import { tokens, UserProfile } from '@/types/user.type';
 
 type AuthState = {
-  user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
+  user: UserProfile | null;
   isRestoring: boolean;
   isLoggedIn: boolean;
-  restoreUser: () => Promise<void>;
-  login: () => Promise<void>;
-  logout: () => Promise<void>;
+  isRegistering: boolean;
+  tempTokens: tokens | null;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+type AuthActions = {
+  setUser: (user: UserProfile) => void;
+  setIsRestoring: (isRestoring: boolean) => void;
+  setIsRegistering: (isRegistering: boolean) => void;
+  resetUser: () => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  setTempTokens: (tempTokens: tokens) => void;
+};
+
+export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   user: null,
-  accessToken: null,
-  refreshToken: null,
   isRestoring: true,
   isLoggedIn: false,
-  restoreUser: async () => {
-    try {
-      // TODO: Get user from backend
-      const user = { id: "1", name: "John Doe", email: "john.doe@example.com", avatar: "https://example.com/avatar.png", createdAt: new Date(), updatedAt: new Date() } as User; 
-      if (user) {
-        set({ user: user, isLoggedIn: true });
-      }
-    } catch (error) {
-      set({ user: null, isLoggedIn: false });
-    } finally {
-      set({ isRestoring: false });
-    }
-  },
-  login: async () => {
-    // TODO: Login to backend
-    const user = { id: "1", name: "John Doe", email: "john.doe@example.com", avatar: "https://example.com/avatar.png", createdAt: new Date(), updatedAt: new Date() } as User; 
-    set({ user, isLoggedIn: true });
-  },
-  logout: async () => {
-    // TODO: Logout from backend
-    set({
-      user: null,
-      accessToken: null,
-      refreshToken: null,
-      isLoggedIn: false,
-    });
-  },
+  isRegistering: false,
+  tempTokens: null,
+  setIsLoggedIn: (isLoggedIn: boolean) => set({ isLoggedIn }),
+  setUser: (user: UserProfile) => set({ user, isLoggedIn: true }),
+  setIsRestoring: (isRestoring: boolean) => set({ isRestoring }),
+  setIsRegistering: (isRegistering: boolean) => set({ isRegistering }),
+  setTempTokens: (tempTokens: tokens | null) => set({ tempTokens }),
+  resetUser: () => set({ user: null, isLoggedIn: false, isRegistering: false }),
 }));

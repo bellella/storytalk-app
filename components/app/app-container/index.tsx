@@ -34,7 +34,7 @@ export function AppContainer({
   children,
 }: AppContainerProps) {
   return (
-    <View className="bg-background flex-1">
+    <View className="flex-1 bg-background">
       <AppHeader
         title={headerTitle}
         left={headerLeft}
@@ -56,7 +56,7 @@ export function AppContainer({
           >
             <View
               className={cn(
-                'w-full max-w-[600px]',
+                'h-full w-full max-w-[600px]',
                 hasFloatButton ? 'mb-20' : ''
               )}
             >

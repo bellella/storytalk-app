@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import episode1 from '@/data/episodes/1.json';
 import { episodeGetEpisodeDetail } from '../api/generated/episode/episode';
 
-export function useEpisode(id: string) {
+export function useEpisode(id: string | number) {
+  const numericId = typeof id === 'string' ? Number(id) : id;
   return useQuery({
-    queryKey: ['episode', id],
+    queryKey: ['episode', numericId],
     queryFn: async () => {
-      const response = await episodeGetEpisodeDetail(id);
+      const response = await episodeGetEpisodeDetail(numericId);
       return response;
     },
-    enabled: !!id,
+    enabled: !!numericId && !isNaN(numericId),
   });
 }

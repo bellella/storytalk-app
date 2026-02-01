@@ -38,11 +38,10 @@ cssInterop(PrimitiveIcon, {
 });
 
 const buttonStyle = tva({
-  base: 'group/button h-32 rounded bg-primary-500 flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2',
+  base: 'group/button h-32 rounded-lg bg-primary flex-row items-center justify-center data-[focus-visible=true]:web:outline-none data-[focus-visible=true]:web:ring-2 data-[disabled=true]:opacity-40 gap-2',
   variants: {
     action: {
-      primary:
-        'items-center rounded-full bg-[#8E97FD] shadow-lg shadow-[#8E97FD]',
+      primary: '',
       secondary:
         'bg-secondary-500 border-secondary-300 data-[hover=true]:bg-secondary-600 data-[hover=true]:border-secondary-400 data-[active=true]:bg-secondary-700 data-[active=true]:border-secondary-700 data-[focus-visible=true]:web:ring-indicator-info',
       positive:
@@ -120,11 +119,11 @@ const buttonStyle = tva({
 });
 
 const buttonTextStyle = tva({
-  base: 'text-typography-0 font-semibold web:select-none text-sm',
+  base: 'font-semibold web:select-none text-sm text-white',
   parentVariants: {
     action: {
       primary:
-        'text-primary-600 data-[hover=true]:text-primary-600 data-[active=true]:text-primary-700',
+        'text-white data-[hover=true]:text-primary-600 data-[active=true]:text-primary-700',
       secondary:
         'text-typography-500 data-[hover=true]:text-typography-600 data-[active=true]:text-typography-700',
       positive:
@@ -151,7 +150,7 @@ const buttonTextStyle = tva({
       variant: 'solid',
       action: 'primary',
       class:
-        'text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0',
+        'text-onPrimary data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0',
     },
     {
       variant: 'solid',
@@ -231,7 +230,7 @@ const buttonIconStyle = tva({
       variant: 'solid',
       action: 'primary',
       class:
-        'text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0',
+        'data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0',
     },
     {
       variant: 'solid',

@@ -57,7 +57,7 @@ export const Colors = {
       "surfaceDim": "#DBD9E2",
       "surfaceTint": "#4C54B6",
       "surfaceVariant": "#E3E1F0",
-      "tertiary": "#745A29",
+      "tertiary": "#FFDB9D",
       "tertiaryContainer": "#FFDB9D",
       "tertiaryFixed": "#FFDEA6",
       "tertiaryFixedDim": "#E4C286"
@@ -211,7 +211,7 @@ export const ColorVariables = {
     "--color-surface-dim": "#DBD9E2",
     "--color-surface-tint": "#4C54B6",
     "--color-surface-variant": "#E3E1F0",
-    "--color-tertiary": "#745A29",
+    "--color-tertiary": "#FFDB9D",
     "--color-tertiary-0": "#FFF8F3",
     "--color-tertiary-50": "#FFEFD7",
     "--color-tertiary-100": "#FFDEA6",

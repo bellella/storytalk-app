@@ -1,9 +1,14 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import * as Google from 'expo-auth-session/providers/google';
 import { useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { useEffect, useState } from 'react';
 import { Alert, Platform } from 'react-native';
+import { authGoogleLogin } from '@/lib/api/generated/auth/auth';
 import { useAuth } from '@/lib/hooks/auth/useAuth';
+
+// This must be called at module level to properly close the popup on web
+WebBrowser.maybeCompleteAuthSession();
 
 // Configure Google Sign-In for native platforms
 GoogleSignin.configure({
@@ -23,35 +28,38 @@ export const useGoogleAuth = () => {
     iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
     redirectUri: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_REDIRECT_URI,
     scopes: ['profile', 'email'],
+    responseType: 'id_token',
   });
 
-  const handleGoogleAuth = async (accessToken: string) => {
-    // Send Google access token to backend for authentication
-    const responseData = { isNewUser: false }; //await authGoogleTokenLogin({ accessToken });
+  /**
+   * Send Google ID token to backend and handle login
+   */
+  const handleGoogleAuth = async (idToken: string) => {
+    // Send Google ID token to backend for authentication
+    const response = await authGoogleLogin({ idToken });
 
-    if (responseData.isNewUser) {
-      // New user registration completed
+    if (response.isNew) {
       Alert.alert('Welcome!', 'Registration completed successfully.');
     }
 
-    // Fetch customer info and store in auth state
-    await login();
-
-    router.replace('/');
+    // Store tokens and set user
+    login(response);
   };
 
   // Handle web authentication response
   useEffect(() => {
     if (response?.type === 'success') {
-      const { access_token } = response.params;
-      handleWebAuth(access_token);
+      const idToken = response.params.id_token;
+      if (idToken) {
+        handleWebAuth(idToken);
+      }
     }
   }, [response]);
 
-  const handleWebAuth = async (accessToken: string) => {
+  const handleWebAuth = async (idToken: string) => {
     try {
       setLoading(true);
-      await handleGoogleAuth(accessToken);
+      await handleGoogleAuth(idToken);
     } catch (error: any) {
       console.error('Google login failed:', error);
       Alert.alert(
@@ -76,11 +84,10 @@ export const useGoogleAuth = () => {
         const { data } = await GoogleSignin.signIn();
 
         if (!data?.idToken) {
-          throw new Error('Failed to get Google access token.');
+          throw new Error('Failed to get Google ID token.');
         }
-        // Get access token from Google Sign-In
-        const tokens = await GoogleSignin.getTokens();
-        await handleGoogleAuth(tokens.accessToken);
+
+        await handleGoogleAuth(data.idToken);
       }
     } catch (error: any) {
       console.error('Google login failed:', error);

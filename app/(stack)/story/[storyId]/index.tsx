@@ -11,10 +11,12 @@ import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { storyGetStoryDetail } from '@/lib/api/generated/story/story';
+import { useColors } from '@/lib/hooks/theme/useColors';
 
 export default function StoryDetailScreen() {
   const { storyId } = useLocalSearchParams();
   const router = useRouter();
+  const { colors } = useColors();
   const { data, isLoading } = useQuery({
     queryKey: ['story', storyId],
     queryFn: () => storyGetStoryDetail(Number(storyId)),
@@ -27,7 +29,7 @@ export default function StoryDetailScreen() {
   const { title, description, coverImage, characters, episodes } = data;
 
   const handleStartEpisode = (ep: any) => {
-    router.push(`/story/${storyId}/episodes/${ep.id}/review`);
+    router.push(`/story/${storyId}/episodes/${ep.id}/play`);
   };
 
   const handleReviewEpisode = (ep: any) => {
@@ -59,8 +61,8 @@ export default function StoryDetailScreen() {
             >
               <Heart
                 size={22}
-                color={liked ? '#FF0000' : '#3F414E'}
-                fill={liked ? '#FF0000' : 'none'}
+                color={liked ? colors.onError : colors.error}
+                fill={liked ? colors.onError : 'none'}
               />
             </Pressable>
           </Box>
@@ -79,7 +81,7 @@ export default function StoryDetailScreen() {
               Characters
             </Text>
             <ScrollView horizontal className="flex-row gap-4">
-              {characters.map((char) => (
+              {characters?.map((char) => (
                 <VStack key={char.id} className="min-w-[70px] items-center">
                   <Box className="mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5F5F9] text-3xl">
                     {char.avatarImage ? (
@@ -89,7 +91,7 @@ export default function StoryDetailScreen() {
                         resizeMode="cover"
                       />
                     ) : (
-                      <Text>{char.name[0]}</Text>
+                      <Text>{char.name?.charAt(0)}</Text>
                     )}
                   </Box>
                   <Text className="text-xs font-bold text-[#3F414E]">
@@ -123,10 +125,10 @@ export default function StoryDetailScreen() {
                       {ep.duration}
                     </Text>
                   </VStack>
-                  {ep.order <= ep.progress && (
+                  {ep.userEpisode?.isCompleted && (
                     <Box className="rounded-md bg-green-50 px-2 py-1">
                       <Text className="text-[9px] font-black uppercase text-green-500">
-                        Completed
+                        학습완료
                       </Text>
                     </Box>
                   )}
@@ -136,13 +138,13 @@ export default function StoryDetailScreen() {
                 <Box className="mb-4 h-1 w-full overflow-hidden rounded-full bg-[#F5F5F9]">
                   <Box
                     className={`h-full bg-[#8E97FD] transition-all`}
-                    style={{ width: `${ep.progress}%` }}
+                    style={{ width: `${ep.userEpisode?.progressPct ?? 0}%` }}
                   />
                 </Box>
 
                 {/* Actions */}
                 <HStack className="gap-2">
-                  {ep.progress === 100 ? (
+                  {ep.userEpisode?.progressPct === 100 ? (
                     <>
                       <Button
                         onPress={() => handleReviewEpisode(ep)}
@@ -166,11 +168,12 @@ export default function StoryDetailScreen() {
                   ) : (
                     <Button
                       onPress={() => handleStartEpisode(ep)}
-                      className="w-full flex-row items-center justify-center gap-2 rounded-xl bg-[#8E97FD] py-2.5"
+                      action="primary"
+                      className="w-full"
                     >
-                      <Play size={14} color="white" />
-                      <ButtonText className="text-[11px] font-bold text-white">
-                        {ep.progress > 0 ? '학습 이어하기' : '학습 시작하기'}
+                      <Play size={14} color={colors.onPrimary} />
+                      <ButtonText>
+                        {ep.userEpisode?.isCompleted ? '완료' : '에피소드 읽기'}
                       </ButtonText>
                     </Button>
                   )}
@@ -187,6 +190,7 @@ export default function StoryDetailScreen() {
             episodes.length > 0 ? handleStartEpisode(episodes[0]) : null
           }
           className="w-full"
+          action="primary"
         >
           <ButtonText>첫 화 읽기</ButtonText>
         </Button>

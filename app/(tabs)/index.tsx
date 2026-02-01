@@ -4,11 +4,14 @@ import { Link } from 'expo-router';
 import { BookOpen, Moon } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView } from 'react-native';
+import { useShallow } from 'zustand/react/shallow';
 import { AppContainer } from '@/components/app/app-container';
 import { Pressable } from '@/components/ui/pressable';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
 import { storyGetStories } from '@/lib/api/generated/story/story';
+import { useUser } from '@/lib/hooks/auth/userUser';
+import { useAuthStore } from '@/lib/stores/auth.store';
 
 type Category = {
   id: number;
@@ -66,12 +69,15 @@ export default function HomeScreen() {
     queryKey: ['stories'],
     queryFn: () => storyGetStories(),
   });
+  const { user, isLoggedIn } = useUser();
   const stories = data?.items ?? [];
   return (
     <AppContainer showHeaderLogo>
       <View className="px-6">
         {/* ---------- Greeting ---------- */}
-        <Text className="mt-4 text-3xl font-bold">좋은 아침이에요!</Text>
+        <Text className="mt-4 text-3xl font-bold">
+          좋은 아침이에요! {user?.name}
+        </Text>
         <Text className="mb-8 mt-1 text-lg font-medium text-[#A1A4B2]">
           오늘도 즐거운 학습 되세요.
         </Text>

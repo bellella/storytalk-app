@@ -1,7 +1,8 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
+import { DialogueText } from '@/components/story/DialogueText';
 import { Image } from '@/components/ui/image';
 import { useEpisode } from '@/lib/hooks/useEpisodes';
 
@@ -12,6 +13,9 @@ export default function StoryReaderScreen() {
   const [sceneIndex, setSceneIndex] = useState(0);
   const [eventIndex, setEventIndex] = useState(0);
   const [popup, setPopup] = useState<any | null>(null);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [alwaysShowTranslation, setAlwaysShowTranslation] = useState(false);
+
   const currentScene = episode?.scenes?.[sceneIndex];
   const currentEvent = currentScene?.dialogues?.[eventIndex];
   const totalEvents = currentScene?.dialogues?.length ?? 1;
@@ -23,9 +27,23 @@ export default function StoryReaderScreen() {
     }
   }, [currentEvent]);
 
-  const handleNext = () => {
+  // Reset typing state when event changes
+  useEffect(() => {
+    setIsTypingComplete(false);
+  }, [eventIndex, sceneIndex]);
+
+  const handleTypingComplete = useCallback(() => {
+    setIsTypingComplete(true);
+  }, []);
+
+  const handleNext = useCallback(() => {
     if (popup) {
       setPopup(null);
+      return;
+    }
+
+    // If typing is not complete, don't proceed (DialogueText handles skip internally)
+    if (currentEvent?.type === 'dialogue' && !isTypingComplete) {
       return;
     }
 
@@ -53,12 +71,22 @@ export default function StoryReaderScreen() {
     } else {
       setEventIndex(nextEventIdx);
     }
-  };
+  }, [
+    popup,
+    currentEvent?.type,
+    isTypingComplete,
+    eventIndex,
+    currentScene,
+    episode,
+    sceneIndex,
+    router,
+    storyId,
+    episodeId,
+  ]);
 
-  // const activeChar = useMemo(() => {
-  //   if (!currentEvent?.characterId) return null;
-  //   return episode.characters.find((c) => c.id === currentEvent.characterId);
-  // }, [currentEvent, episode]);
+  const toggleAlwaysShowTranslation = useCallback(() => {
+    setAlwaysShowTranslation((prev) => !prev);
+  }, []);
 
   const bgGradient = useMemo(() => {
     const bg = currentScene?.bgImageUrl ?? '';
@@ -91,10 +119,29 @@ export default function StoryReaderScreen() {
                 {episode?.title}
               </Text>
 
-              <View className="rounded-full bg-[#F1F3FF] px-3 py-1">
-                <Text className="text-xs font-bold text-[#6D6F7B]">
-                  Scene {sceneIndex + 1}/{episode?.scenes.length}
-                </Text>
+              <View className="flex-row items-center gap-3">
+                {/* Always show translation toggle */}
+                <Pressable
+                  onPress={toggleAlwaysShowTranslation}
+                  className={`rounded-full px-3 py-1 ${
+                    alwaysShowTranslation ? 'bg-[#8E97FD]' : 'bg-[#F1F3FF]'
+                  }`}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Text
+                    className={`text-xs font-bold ${
+                      alwaysShowTranslation ? 'text-white' : 'text-[#6D6F7B]'
+                    }`}
+                  >
+                    {alwaysShowTranslation ? '해석 ON' : '해석 OFF'}
+                  </Text>
+                </Pressable>
+
+                <View className="rounded-full bg-[#F1F3FF] px-3 py-1">
+                  <Text className="text-xs font-bold text-[#6D6F7B]">
+                    Scene {sceneIndex + 1}/{episode?.scenes.length}
+                  </Text>
+                </View>
               </View>
             </View>
 
@@ -148,19 +195,17 @@ export default function StoryReaderScreen() {
 
             {/* Dialogue */}
             {currentEvent?.type === 'dialogue' && (
-              <View className="mx-4 rounded-[28px] bg-white px-6 py-5 shadow-lg shadow-black/5">
+              <View className="mx-4 h-[20vh] rounded-[28px] bg-white px-6 py-5 shadow-lg shadow-black/5">
                 <Text className="mb-1 text-xs font-extrabold uppercase tracking-widest text-[#8E97FD]">
                   {currentEvent.characterName}
                 </Text>
-                <Text className="text-lg leading-relaxed text-[#3F414E]">
-                  {currentEvent.englishText}
-                </Text>
-
-                <View className="mt-3 items-end">
-                  <Text className="text-xs font-bold text-[#C5C7D6]">
-                    Tap ▶
-                  </Text>
-                </View>
+                <DialogueText
+                  englishText={currentEvent.englishText}
+                  koreanText={currentEvent.koreanText}
+                  alwaysShowTranslation={alwaysShowTranslation}
+                  onTypingComplete={handleTypingComplete}
+                  typingSpeed={20}
+                />
               </View>
             )}
 

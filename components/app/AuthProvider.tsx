@@ -1,23 +1,19 @@
-// src/components/RestoreUserGate.tsx
-import { useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
-import { useAuthStore } from "@/lib/stores/auth.store";
-import * as WebBrowser from "expo-web-browser";
+import { useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { useAuth } from '@/lib/hooks/auth/useAuth';
+import { useAuthStore } from '@/lib/stores/auth.store';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { restoreUser, isRestoring } = useAuthStore();
+  const { restoreUser } = useAuth();
+  const isRestoring = useAuthStore((state) => state.isRestoring);
 
   useEffect(() => {
     restoreUser();
   }, []);
 
-  useEffect(() => {
-    WebBrowser.maybeCompleteAuthSession();
-  }, []);
-
   if (isRestoring) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
       </View>
     );

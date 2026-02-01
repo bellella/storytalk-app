@@ -9,6 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "usesAppleSignIn": true,
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.minacoco.storytalk",
@@ -49,7 +50,17 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.844014056331-qu5eieejkkusrr776iiip1umebkj796f"
         }
-      ]
+      ],
+      [
+        "expo-apple-authentication"
+      ],
+      [
+        "@react-native-seoul/naver-login",
+        {
+          "urlScheme": "com.minacoco.storytalk"
+        }
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

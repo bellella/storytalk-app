@@ -7,6 +7,7 @@ import '@/global.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/lib/hooks/theme/useColors';
+import { useInitialize } from '@/lib/hooks/useInitialize';
 import { useLayoutStore } from '@/lib/stores/layout.store';
 import { expoTheme } from '@/theme/expoTheme';
 
@@ -17,6 +18,7 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
+  useInitialize();
   const { colorScheme } = useColors();
   const { updateMaxContentWidth } = useLayoutStore();
 
@@ -26,7 +28,7 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <SafeAreaView
             edges={['top', 'bottom']}
-            className="bg-background flex-1"
+            className="flex-1 bg-background"
           >
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

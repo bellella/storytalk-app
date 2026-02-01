@@ -9,8 +9,10 @@ import { Pressable, ScrollView } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
+import { useUser } from '@/lib/hooks/auth/userUser';
 
 export default function ProfileScreen() {
+  const { user } = useUser();
   const savedExpressions = [
     { id: 1, en: 'Confidence just evaporated', ko: '자신감이 증발해버렸어' },
     { id: 2, en: 'Organize books', ko: '책을 정리하다' },
@@ -32,9 +34,11 @@ export default function ProfileScreen() {
             <Text className="text-4xl">🙋‍♂️</Text>
           </Box>
           <Box>
-            <Text className="text-2xl font-bold text-[#3F414E]">김철수 님</Text>
+            <Text className="text-2xl font-bold text-[#3F414E]">
+              {user?.name} 님
+            </Text>
             <Text className="font-medium text-[#A1A4B2]">
-              Level 12 • Explorer
+              Level {user?.level} • Explorer
             </Text>
           </Box>
         </Box>
@@ -44,7 +48,9 @@ export default function ProfileScreen() {
           <Box className="rounded-[25px] bg-[#F5F5F9] p-5">
             <Box className="mb-1 flex-row items-center gap-2 text-[#8E97FD]">
               <Flame size={18} color="#8E97FD" />
-              <Text className="text-xl font-black text-[#8E97FD]">12</Text>
+              <Text className="text-xl font-black text-[#8E97FD]">
+                {user?.streakDays}
+              </Text>
             </Box>
             <Text className="text-xs font-bold uppercase text-[#A1A4B2]">
               Streak Days
@@ -54,7 +60,9 @@ export default function ProfileScreen() {
           <Box className="rounded-[25px] bg-[#F5F5F9] p-5">
             <Box className="mb-1 flex-row items-center gap-2 text-[#FFDB9D]">
               <Star size={18} color="#FFDB9D" fill="#FFDB9D" />
-              <Text className="text-xl font-black text-[#FFDB9D]">2,450</Text>
+              <Text className="text-xl font-black text-[#FFDB9D]">
+                {user?.exp}
+              </Text>
             </Box>
             <Text className="text-xs font-bold uppercase text-[#A1A4B2]">
               Total EXP

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node scripts/generateTheme.js:*)"
+      "Bash(node scripts/generateTheme.js:*)",
+      "Bash(npx expo install:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
