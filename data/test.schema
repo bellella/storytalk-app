@@ -1,0 +1,101 @@
+model ReviewItem {
+  id          Int @id @default(autoincrement())
+  episodeId   Int
+  dialogueId  Int
+  description String?
+  order       Int
+
+  @@unique([episodeId, dialogueId])
+  @@index([episodeId])
+}
+
+enum QuizType {
+  INTERPRETATION
+  STORY_COMPREHENSION
+  NEXT_DIALOGUE_PREDICTION
+  GRAMMAR
+}
+
+enum QuizSourceType {
+  EPISODE
+  LESSON
+}
+
+model Quiz {
+  id              Int      @id @default(autoincrement())
+  sourceType      QuizSourceType
+  sourceId        Int
+  type            QuizType
+
+  questionEnglish String
+  questionKorean  String?
+  answerIndex     Int
+  description     String?
+  order           Int?
+
+  options         QuizOption[]
+
+  @@index([sourceType, sourceId])
+}
+
+model QuizOption {
+  id     Int @id @default(autoincrement())
+  quizId Int
+  text   String
+  order  Int
+
+  quiz   Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+}
+
+enum QuizAnswerStatus {
+  ACTIVE
+  ARCHIVED
+  INVALID
+}
+
+model UserQuizAnswer {
+  id            Int @id @default(autoincrement())
+  userId        Int
+  quizId        Int
+  selectedIndex Int
+  isCorrect     Boolean
+  attemptNumber Int @default(1)
+  createdAt     DateTime @default(now())
+  status        QuizAnswerStatus @default(ACTIVE)
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([quizId])
+  @@index([userId, quizId])
+}
+
+enum EpisodeStage {
+  STORY_IN_PROGRESS
+  STORY_COMPLETED
+  QUIZ_IN_PROGRESS
+  QUIZ_COMPLETED
+}
+
+model UserEpisodeResult {
+  id           Int @id @default(autoincrement())
+  userId       Int
+  episodeId    Int
+
+  startedAt    DateTime @default(now())
+  completedAt  DateTime?
+
+  lastSceneId  Int?
+  currentStage EpisodeStage
+
+  score        Int?
+  isCompleted  Boolean @default(false)
+
+  meta         Json?
+
+  @@unique([userId, episodeId])
+  @@index([userId])
+  @@index([episodeId])
+}

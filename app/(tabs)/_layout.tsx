@@ -20,10 +20,10 @@ type TabIconProps = {
 
 function TabIcon({ icon, label, focused }: TabIconProps) {
   return (
-    <View className="items-center gap-1">
+    <View className="top-5 items-center gap-1">
       <View
         className={`rounded-2xl p-3 ${
-          focused ? 'bg-primary shadow-primary shadow-lg' : ''
+          focused ? 'bg-primary shadow-lg shadow-primary' : ''
         }`}
       >
         <Icon
@@ -50,8 +50,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: {
-          position: 'absolute',
-          height: 96,
+          height: 80,
           borderTopWidth: 1,
           borderTopColor: '#F1F1F1',
           backgroundColor: 'rgba(255,255,255,0.9)',

@@ -14,9 +14,11 @@ export function FloatingContainer({
   return (
     <SafeAreaView
       edges={['bottom']}
-      className="absolute bottom-0 left-0 right-0 px-4 pb-4"
+      className="absolute bottom-0 left-0 right-0"
     >
-      <View className={`w-full max-w-[600px] self-center p-3 ${className}`}>
+      <View
+        className={`w-full max-w-[600px] self-center px-3 pb-4 ${className}`}
+      >
         {children}
       </View>
     </SafeAreaView>
