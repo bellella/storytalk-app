@@ -6,8 +6,10 @@
  * OpenAPI spec version: 1.0
  */
 import type {
+  DailyQuizCompleteResponseDto,
   DailyQuizResponseDto,
   QuizAnswerResponseDto,
+  QuizScoreDto,
   QuizSessionResponseDto,
   StartQuizSessionDto,
   SubmitDailyQuizDto,
@@ -43,8 +45,8 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
     }
   export const quizCompleteSession = (
     sessionId: number,
- options?: SecondParameter<typeof customInstance<QuizSessionResponseDto>>,) => {
-      return customInstance<QuizSessionResponseDto>(
+ options?: SecondParameter<typeof customInstance<QuizScoreDto>>,) => {
+      return customInstance<QuizScoreDto>(
       {url: `/api/quiz/sessions/${sessionId}/complete`, method: 'PATCH'
     },
       options);
@@ -57,11 +59,11 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
     },
       options);
     }
-  export const quizSubmitDailyQuiz = (
+  export const quizCompleteDailyQuiz = (
     sessionId: number,
     submitDailyQuizDto: SubmitDailyQuizDto,
- options?: SecondParameter<typeof customInstance<QuizSessionResponseDto | QuizSessionResponseDto>>,) => {
-      return customInstance<QuizSessionResponseDto | QuizSessionResponseDto>(
+ options?: SecondParameter<typeof customInstance<DailyQuizCompleteResponseDto | DailyQuizCompleteResponseDto>>,) => {
+      return customInstance<DailyQuizCompleteResponseDto | DailyQuizCompleteResponseDto>(
       {url: `/api/quiz/sessions/${sessionId}/daily/complete`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: submitDailyQuizDto
@@ -72,4 +74,4 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 export type QuizSubmitAnswerResult = NonNullable<Awaited<ReturnType<typeof quizSubmitAnswer>>>
 export type QuizCompleteSessionResult = NonNullable<Awaited<ReturnType<typeof quizCompleteSession>>>
 export type QuizGetDailyQuizResult = NonNullable<Awaited<ReturnType<typeof quizGetDailyQuiz>>>
-export type QuizSubmitDailyQuizResult = NonNullable<Awaited<ReturnType<typeof quizSubmitDailyQuiz>>>
+export type QuizCompleteDailyQuizResult = NonNullable<Awaited<ReturnType<typeof quizCompleteDailyQuiz>>>

@@ -6,11 +6,11 @@
  * OpenAPI spec version: 1.0
  */
 
-export type StartQuizSessionDtoType = typeof StartQuizSessionDtoType[keyof typeof StartQuizSessionDtoType];
+export type EpisodeRewardDtoType = typeof EpisodeRewardDtoType[keyof typeof EpisodeRewardDtoType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const StartQuizSessionDtoType = {
-  EPISODE: 'EPISODE',
-  DAILY_QUIZ: 'DAILY_QUIZ',
+export const EpisodeRewardDtoType = {
+  CHARACTER_UNLOCK: 'CHARACTER_UNLOCK',
+  ITEM: 'ITEM',
 } as const;

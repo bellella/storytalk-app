@@ -12,6 +12,5 @@ export type QuizSessionResponseDtoType = typeof QuizSessionResponseDtoType[keyof
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QuizSessionResponseDtoType = {
   EPISODE: 'EPISODE',
-  PRACTICE: 'PRACTICE',
   DAILY_QUIZ: 'DAILY_QUIZ',
 } as const;

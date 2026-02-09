@@ -2,34 +2,52 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { episodeGetQuizzes } from '@/lib/api/generated/episode/episode';
 import {
+  DailyQuizResponseDto,
+  QuizDto,
   StartQuizSessionDtoType,
   SubmitQuizAnswerDtoPayload,
 } from '@/lib/api/generated/model';
 import {
   quizCompleteSession,
+  quizGetDailyQuiz,
   quizStartSession,
   quizSubmitAnswer,
 } from '@/lib/api/generated/quiz/quiz';
 
-export function useQuiz(episodeId: number, type: StartQuizSessionDtoType) {
-  const { data, isLoading } = useQuery({
-    queryKey: ['quiz', episodeId],
+export function useQuiz(
+  type: StartQuizSessionDtoType = StartQuizSessionDtoType.EPISODE,
+  episodeId: number = 0
+) {
+  const { data, isLoading } = useQuery<QuizDto[] | DailyQuizResponseDto>({
+    queryKey: ['quiz', episodeId, type],
     queryFn: async () => {
-      const response = await episodeGetQuizzes(episodeId);
-      return response;
+      if (type === StartQuizSessionDtoType.EPISODE) {
+        const response = await episodeGetQuizzes(episodeId);
+        return response;
+      } else if (type === StartQuizSessionDtoType.DAILY_QUIZ) {
+        const response = await quizGetDailyQuiz();
+        return response;
+      }
+      return [];
     },
   });
   const startQuizMutation = useStartQuiz(episodeId, type);
   useEffect(() => {
-    if (data) {
+    if (type === StartQuizSessionDtoType.EPISODE && data) {
       startQuizMutation.mutateAsync();
     }
-  }, [data]);
-  const quizSessionId = startQuizMutation.data?.id ?? 0;
+  }, [data, type]);
+
+  const quizSessionId =
+    (data as DailyQuizResponseDto)?.session?.id ??
+    startQuizMutation.data?.id ??
+    0;
   const answerQuizMutation = useAnswerQuiz(quizSessionId);
   const completeQuizMutation = useCompleteQuiz(quizSessionId);
   return {
-    quizzes: data ?? [],
+    quizzes: (data as DailyQuizResponseDto)?.quizzes
+      ? (data as DailyQuizResponseDto).quizzes
+      : (data as QuizDto[]),
     isLoading,
     answerQuiz: answerQuizMutation.mutateAsync,
     completeQuiz: completeQuizMutation.mutateAsync,
@@ -77,3 +95,12 @@ export function useCompleteQuiz(quizSessionId: number) {
     },
   });
 }
+
+// export function useSubmitDailyQuiz() {
+//   return useMutation({
+//     mutationFn: async (data: SubmitDailyQuizDto) => {
+//       const response = await quizSubmitDailyQuiz(data);
+//       return response;
+//     },
+//   });
+// }

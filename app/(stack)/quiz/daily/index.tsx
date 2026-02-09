@@ -1,8 +1,5 @@
-import {
-  RelativePathString,
-  useLocalSearchParams,
-  useRouter,
-} from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import LottieView from 'lottie-react-native';
 import { useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
@@ -17,19 +14,14 @@ import {
   QuizDtoType,
   StartQuizSessionDtoType,
 } from '@/lib/api/generated/model';
-import { useCompleteEpisode } from '@/lib/hooks/episodes/useCompleteEpisode';
 import { useQuiz } from '@/lib/hooks/quiz/useQuiz';
-import { EpisodeResult } from '@/types/result.type';
 
-export default function EpisodeQuizScreen() {
+export default function DailyQuizScreen() {
   const router = useRouter();
-  const { episodeId, storyId } = useLocalSearchParams();
-  const completeEpisode = useCompleteEpisode(Number(episodeId));
-
   const { quizzes, isLoading, answerQuiz, completeQuiz } = useQuiz(
-    StartQuizSessionDtoType.EPISODE,
-    Number(episodeId)
+    StartQuizSessionDtoType.DAILY_QUIZ
   );
+  s;
 
   const [quizIdx, setQuizIdx] = useState(0);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -41,7 +33,7 @@ export default function EpisodeQuizScreen() {
         <View className="flex-1 items-center justify-center bg-white">
           <ActivityIndicator size="large" color="#8E97FD" />
           <Text className="mt-4 text-sm text-[#6D6F7B]">
-            퀴즈 불러오는 중...
+            데일리 퀴즈 불러오는 중...
           </Text>
         </View>
       </AppContainer>
@@ -53,7 +45,7 @@ export default function EpisodeQuizScreen() {
       <AppContainer showBackButton>
         <View className="flex-1 items-center justify-center bg-white px-8">
           <Text className="text-center text-lg font-bold text-[#3F414E]">
-            이 에피소드에 퀴즈가 없어요
+            데일리 퀴즈가 없어요
           </Text>
           <Text className="mt-2 text-center text-sm text-[#6D6F7B]">
             다른 화면으로 이동해 주세요.
@@ -97,22 +89,9 @@ export default function EpisodeQuizScreen() {
     }
   };
 
-  const finishQuiz = async () => {
-    const quizResult = await completeQuiz();
-    const episodeResult = await completeEpisode();
-    const resultObject: EpisodeResult = {
-      quiz: quizResult,
-      xp: episodeResult.xp,
-      episode: episodeResult.episode,
-      rewards: episodeResult.rewards,
-    };
-    router.replace({
-      pathname:
-        `/story/${storyId}/episodes/${episodeId}/result` as RelativePathString,
-      params: {
-        result: JSON.stringify(resultObject),
-      },
-    });
+  const finishQuiz = () => {
+    completeQuiz();
+    router.replace('/quiz/daily/result');
   };
 
   const renderQuizBody = () => {
@@ -145,6 +124,7 @@ export default function EpisodeQuizScreen() {
 
   return (
     <>
+      <LottieView autoPlay source={require('@/assets/lotties/confetti.json')} />
       <ModalHeader onClose={() => router.back()} />
       <View className="mx-auto max-w-[600px] flex-1 p-4">
         <VStack className="flex-1">

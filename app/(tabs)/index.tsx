@@ -44,19 +44,19 @@ type Novel = {
 const CATEGORIES: Category[] = [
   {
     id: 1,
-    title: '기초 코스',
-    sub: 'Course',
+    title: '상황별 회화',
+    sub: 'Situational Conversation',
     color: 'bg-primary',
     text: 'text-white',
     href: '/units',
   },
   {
     id: 2,
-    title: '휴식 모드',
-    sub: 'Music',
+    title: '데일리 학습',
+    sub: 'Daily Learning',
     color: 'bg-[#FFDEA6]',
     text: 'text-[#3F414E]',
-    href: '/units',
+    href: '/quiz/daily',
   },
 ];
 

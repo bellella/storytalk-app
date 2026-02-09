@@ -1,23 +1,32 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import LottieView from 'lottie-react-native';
 import { Text, View } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
 import { FloatingContainer } from '@/components/common/FloatingContainer';
 import { Button, ButtonText } from '@/components/ui/button';
 import { HStack } from '@/components/ui/hstack';
-import { EpisodeResult } from '@/types/result.type';
+import { DailyQuizResult, EpisodeResult } from '@/types/result.type';
 
-export default function EpisodeResultScreen() {
+export default function DailyQuizResultScreen() {
   const { result: resultJson } = useLocalSearchParams();
-  const result: EpisodeResult = JSON.parse((resultJson as string) || '{}');
+  const result: DailyQuizResult = JSON.parse((resultJson as string) || '{}');
   const quiz = result.quiz;
   const xp = result.xp;
-  const episode = result.episode;
-  const rewards = result.rewards;
   const router = useRouter();
 
   return (
     <>
       <AppContainer showBackButton>
+        <LottieView
+          autoPlay
+          style={{
+            width: 200,
+            height: 200,
+            backgroundColor: '#eee',
+          }}
+          // Find more Lottie files at https://lottiefiles.com/featured
+          source={require('@/assets/lotties/test1.json')}
+        />
         <View className="flex-1 px-5 pt-3">
           {/* Header */}
           <Text className="text-xs font-extrabold uppercase tracking-widest text-[#8E97FD]">

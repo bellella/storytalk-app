@@ -7,28 +7,21 @@ import {
 } from '@/lib/api/generated/model';
 import {
   quizCompleteSession,
-  quizGetDailyQuiz,
   quizStartSession,
   quizSubmitAnswer,
 } from '@/lib/api/generated/quiz/quiz';
 
-export function useQuiz(episodeId: number = 0, type: StartQuizSessionDtoType) {
+export function useQuiz(episodeId: number, type: StartQuizSessionDtoType) {
   const { data, isLoading } = useQuery({
-    queryKey: ['quiz', episodeId, type],
+    queryKey: ['quiz', episodeId],
     queryFn: async () => {
-      if (type === StartQuizSessionDtoType.EPISODE) {
-        const response = await episodeGetQuizzes(episodeId);
-        return response;
-      } else if (type === StartQuizSessionDtoType.PRACTICE) {
-        const response = await quizGetDailyQuiz();
-        return response;
-      }
-      return [];
+      const response = await episodeGetQuizzes(episodeId);
+      return response;
     },
   });
   const startQuizMutation = useStartQuiz(episodeId, type);
   useEffect(() => {
-    if (type === StartQuizSessionDtoType.EPISODE && data) {
+    if (data) {
       startQuizMutation.mutateAsync();
     }
   }, [data]);

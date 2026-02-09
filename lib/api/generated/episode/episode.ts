@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0
  */
 import type {
+  EpisodeCompleteResponseDto,
   EpisodeDetailDto,
   EpisodeProgressDto,
   QuizDto,
@@ -65,8 +66,8 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
     }
   export const episodeCompleteEpisode = (
     id: number,
- options?: SecondParameter<typeof customInstance<SuccessResponseDto>>,) => {
-      return customInstance<SuccessResponseDto>(
+ options?: SecondParameter<typeof customInstance<EpisodeCompleteResponseDto>>,) => {
+      return customInstance<EpisodeCompleteResponseDto>(
       {url: `/api/episodes/${id}/complete`, method: 'PATCH'
     },
       options);

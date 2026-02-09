@@ -61,7 +61,7 @@ export default function ProfileScreen() {
             <Box className="mb-1 flex-row items-center gap-2 text-[#FFDB9D]">
               <Star size={18} color="#FFDB9D" fill="#FFDB9D" />
               <Text className="text-xl font-black text-[#FFDB9D]">
-                {user?.exp}
+                {user?.xp}
               </Text>
             </Box>
             <Text className="text-xs font-bold uppercase text-[#A1A4B2]">
