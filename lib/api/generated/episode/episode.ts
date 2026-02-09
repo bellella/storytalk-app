@@ -7,8 +7,11 @@
  */
 import type {
   EpisodeDetailDto,
+  EpisodeProgressDto,
   QuizDto,
-  ReviewItemDto
+  ReviewItemDto,
+  SuccessResponseDto,
+  UpdateEpisodeProgressDto
 } from '.././model';
 
 import { customInstance } from '../../axios-client';
@@ -41,6 +44,36 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
     },
       options);
     }
+  export const episodeStartEpisode = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<EpisodeProgressDto | EpisodeProgressDto>>,) => {
+      return customInstance<EpisodeProgressDto | EpisodeProgressDto>(
+      {url: `/api/episodes/${id}/start`, method: 'POST'
+    },
+      options);
+    }
+  export const episodeUpdateEpisodeProgress = (
+    id: number,
+    updateEpisodeProgressDto: UpdateEpisodeProgressDto,
+ options?: SecondParameter<typeof customInstance<SuccessResponseDto>>,) => {
+      return customInstance<SuccessResponseDto>(
+      {url: `/api/episodes/${id}/progress`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updateEpisodeProgressDto
+    },
+      options);
+    }
+  export const episodeCompleteEpisode = (
+    id: number,
+ options?: SecondParameter<typeof customInstance<SuccessResponseDto>>,) => {
+      return customInstance<SuccessResponseDto>(
+      {url: `/api/episodes/${id}/complete`, method: 'PATCH'
+    },
+      options);
+    }
   export type EpisodeGetEpisodeDetailResult = NonNullable<Awaited<ReturnType<typeof episodeGetEpisodeDetail>>>
 export type EpisodeGetReviewItemsResult = NonNullable<Awaited<ReturnType<typeof episodeGetReviewItems>>>
 export type EpisodeGetQuizzesResult = NonNullable<Awaited<ReturnType<typeof episodeGetQuizzes>>>
+export type EpisodeStartEpisodeResult = NonNullable<Awaited<ReturnType<typeof episodeStartEpisode>>>
+export type EpisodeUpdateEpisodeProgressResult = NonNullable<Awaited<ReturnType<typeof episodeUpdateEpisodeProgress>>>
+export type EpisodeCompleteEpisodeResult = NonNullable<Awaited<ReturnType<typeof episodeCompleteEpisode>>>

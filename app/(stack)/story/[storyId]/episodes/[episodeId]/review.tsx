@@ -1,15 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronLeft, Star } from 'lucide-react-native';
+import { Bookmark, Volume2 } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
+import { ModalHeader } from '@/components/app/ModalHeader';
+import {
+  Avatar,
+  AvatarFallbackText,
+  AvatarImage,
+} from '@/components/ui/avatar';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { episodeGetReviewItems } from '@/lib/api/generated/episode/episode';
+import { useSpeech } from '@/lib/hooks/useSpeech';
 
 export default function EpisodeReviewScreen() {
   const { storyId, episodeId } = useLocalSearchParams();
@@ -21,110 +28,132 @@ export default function EpisodeReviewScreen() {
   });
 
   const dialogs = data ?? [];
-  const [step, setStep] = useState(0);
   const [bookmarked, setBookmarked] = useState<Record<number, boolean>>({});
+  const { speak, isSpeakingText } = useSpeech({
+    language: 'en-US',
+    rate: 0.85,
+  });
 
   if (isLoading || dialogs.length === 0) return null;
-
-  const current = dialogs[step].dialogue;
 
   const toggleBookmark = (idx: number) => {
     setBookmarked((p) => ({ ...p, [idx]: !p[idx] }));
   };
 
-  const handleNext = () => {
-    if (step === dialogs.length - 1) {
-      router.push(`/story/${storyId}/episodes/${episodeId}/quiz`);
-      return;
-    }
-    setStep((p) => p + 1);
+  const handleSpeak = (text: string, idx: number) => {
+    speak(text, `review-${idx}`, 'female');
+  };
+
+  const handleStartQuiz = () => {
+    router.replace(`/story/${storyId}/episodes/${episodeId}/quiz`);
   };
 
   return (
-    <AppContainer showBackButton>
-      <Box className="flex-1 bg-white p-8">
+    <>
+      <ModalHeader onClose={() => router.back()} />
+      <Box className="flex-1">
         {/* Header */}
-        <HStack className="mb-8 items-center justify-between">
-          <Pressable onPress={() => router.back()}>
-            <Box className="flex h-10 w-10 items-center justify-center rounded-full border">
-              <ChevronLeft size={20} />
-            </Box>
-          </Pressable>
-
-          <Box className="flex flex-col items-center">
-            <Text className="text-sm font-bold text-[#3F414E]">
-              Episode {episodeId}
-            </Text>
-            <HStack className="mt-1 gap-1">
-              {dialogs.map((_, i) => (
-                <Box
-                  key={i}
-                  className={`h-1 rounded-full transition-all ${
-                    i === step ? 'w-4 bg-[#8E97FD]' : 'w-1 bg-[#EBEAEC]'
-                  }`}
-                />
-              ))}
-            </HStack>
-          </Box>
-
-          <Pressable onPress={() => toggleBookmark(step)}>
-            <Box
-              className={`flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${
-                bookmarked[step] ? 'border-yellow-200 bg-yellow-50' : ''
-              }`}
-            >
-              <Star
-                size={20}
-                className={
-                  bookmarked[step]
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-[#A1A4B2]'
-                }
-              />
-            </Box>
-          </Pressable>
-        </HStack>
-
-        {/* Content */}
-        <VStack className="flex-1 items-center justify-center text-center">
-          <Box className="relative mb-6 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#F5F5F9] text-5xl shadow-lg">
-            <Box className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center rounded-full border bg-white text-xl shadow-sm">
-              <Text>
-                {current.character?.avatarImage
-                  ? '🙂'
-                  : (current.character?.name?.[0] ?? '🙂')}
-              </Text>
-            </Box>
-            <Text className="text-4xl">📖</Text>
-          </Box>
-
-          <HStack className="mb-4 items-center gap-2">
-            <Box className="h-2 w-2 rounded-full bg-[#8E97FD]" />
-            <Text className="text-[12px] font-black uppercase tracking-widest text-[#8E97FD]">
-              {current.character?.name ?? 'Narrator'}
-            </Text>
-          </HStack>
-
-          <Text className="mb-6 px-4 text-2xl font-bold leading-relaxed text-[#3F414E]">
-            "{current.englishText}"
+        <Box className="border-b border-[#EBEAEC] px-6 py-4">
+          <Text className="text-center text-lg font-bold text-[#3F414E]">
+            Review
           </Text>
+          <Text className="mt-1 text-center text-sm text-[#A1A4B2]">
+            Episode {episodeId} - {dialogs.length} sentences
+          </Text>
+        </Box>
 
-          <Box className="rounded-2xl bg-[#F5F5F9] px-6 py-4">
-            <Text className="text-base font-semibold leading-relaxed text-[#8E97FD]">
-              {current.koreanText}
-            </Text>
-          </Box>
-        </VStack>
+        {/* Review Items List */}
+        <ScrollView
+          className="flex-1 px-6"
+          showsVerticalScrollIndicator={false}
+        >
+          <VStack className="gap-4 py-6">
+            {dialogs.map((item, idx) => {
+              const dialogue = item.dialogue;
+              const isBookmarked = bookmarked[idx];
+              const isSpeaking = isSpeakingText(`review-${idx}`);
+
+              return (
+                <Box
+                  key={idx}
+                  className="rounded-2xl border border-[#EBEAEC] bg-white p-4"
+                >
+                  {/* Character name */}
+                  <HStack className="mb-3 items-center justify-between">
+                    <HStack className="items-center gap-2">
+                      {dialogue.character?.avatarImage && (
+                        <Avatar>
+                          <AvatarFallbackText>
+                            {dialogue.character?.name}
+                          </AvatarFallbackText>
+                          <AvatarImage
+                            source={{ uri: dialogue.character?.avatarImage }}
+                          />
+                        </Avatar>
+                      )}
+                      <Text className="text-xs font-bold uppercase tracking-wider text-[#8E97FD]">
+                        {dialogue.character?.name ?? 'Narrator'}
+                      </Text>
+                    </HStack>
+
+                    {/* Action buttons */}
+                    <HStack className="gap-2">
+                      <Pressable
+                        onPress={() => handleSpeak(dialogue.englishText, idx)}
+                      >
+                        <Box
+                          className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                            isSpeaking ? 'bg-[#8E97FD]' : 'bg-[#F5F5F9]'
+                          }`}
+                        >
+                          <Volume2
+                            size={16}
+                            color={isSpeaking ? '#FFFFFF' : '#A1A4B2'}
+                          />
+                        </Box>
+                      </Pressable>
+
+                      <Pressable onPress={() => toggleBookmark(idx)}>
+                        <Box
+                          className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                            isBookmarked ? 'bg-yellow-50' : 'bg-[#F5F5F9]'
+                          }`}
+                        >
+                          <Bookmark
+                            size={16}
+                            color={isBookmarked ? '#FBBF24' : '#A1A4B2'}
+                            fill={isBookmarked ? '#FBBF24' : 'none'}
+                          />
+                        </Box>
+                      </Pressable>
+                    </HStack>
+                  </HStack>
+
+                  {/* English text */}
+                  <Text className="mb-2 rounded-lg bg-gray-100 p-2 text-base font-bold leading-relaxed text-gray-600">
+                    {dialogue.englishText}
+                  </Text>
+
+                  {/* Korean translation */}
+                  <Text className="text-sm font-medium text-[#8E97FD]">
+                    {dialogue.koreanText}
+                  </Text>
+                </Box>
+              );
+            })}
+          </VStack>
+        </ScrollView>
 
         {/* Bottom Button */}
-        <Box className="pt-8">
-          <Button className="w-full" onPress={handleNext}>
-            <ButtonText>
-              {step === dialogs.length - 1 ? 'Start Quiz 🚀' : 'Next Dialog'}
-            </ButtonText>
+        <Box className="border-t border-[#EBEAEC] px-6 py-4">
+          <Button
+            className="w-full rounded-[22px] bg-[#8E97FD]"
+            onPress={handleStartQuiz}
+          >
+            <ButtonText className="font-bold text-white">Start Quiz</ButtonText>
           </Button>
         </Box>
       </Box>
-    </AppContainer>
+    </>
   );
 }

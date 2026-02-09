@@ -13,6 +13,8 @@ type DialogueTextProps = {
   onTypingComplete?: () => void;
   /** Called when user taps during typing to skip animation */
   onSkip?: () => void;
+  /** Called when user taps after typing is already complete */
+  onNext?: () => void;
   className?: string;
 };
 
@@ -23,6 +25,7 @@ export function DialogueText({
   alwaysShowTranslation = false,
   onTypingComplete,
   onSkip,
+  onNext,
   className,
 }: DialogueTextProps) {
   const [displayedText, setDisplayedText] = useState('');
@@ -59,14 +62,16 @@ export function DialogueText({
   ]);
 
   // Skip typing animation
-  const handleSkip = useCallback(() => {
-    if (!isTypingComplete) {
+  const handlePress = useCallback(() => {
+    if (isTypingComplete) {
+      onNext?.();
+    } else {
       setDisplayedText(englishText);
       setIsTypingComplete(true);
       onTypingComplete?.();
       onSkip?.();
     }
-  }, [isTypingComplete, englishText, onTypingComplete, onSkip]);
+  }, [isTypingComplete, englishText, onTypingComplete, onSkip, onNext]);
 
   const toggleTranslation = useCallback(() => {
     setShowTranslation((prev) => !prev);
@@ -75,10 +80,10 @@ export function DialogueText({
   const shouldShowTranslation = alwaysShowTranslation || showTranslation;
 
   return (
-    <View className={className}>
+    <View className={`flex-1 ${className}`}>
       {/* English Text - use relative positioning to maintain fixed height */}
-      <Pressable onPress={handleSkip}>
-        <View>
+      <Pressable onPress={handlePress} className="flex-1">
+        <View className="flex-1">
           {/* Invisible full text to reserve space */}
           <Text className="text-lg leading-relaxed text-transparent">
             {englishText}
@@ -90,28 +95,21 @@ export function DialogueText({
           >
             {displayedText}
           </Text>
-        </View>
-      </Pressable>
-
-      {/* Translation row - icon + translation on same line */}
-      <View className="mt-3 flex-row items-center justify-between">
-        <View className="flex-1 flex-row items-center gap-2">
           {/* Korean translation inline */}
           {shouldShowTranslation && isTypingComplete && (
             <Text
-              className="flex-1 text-sm leading-relaxed text-[#6D6F7B]"
+              className="text-sm leading-relaxed text-[#6D6F7B]"
               numberOfLines={2}
             >
               {koreanText}
             </Text>
           )}
         </View>
-
-        {/* Tap hint */}
-        <Text className="ml-2 text-xs font-bold text-[#C5C7D6]">
+        {/* Translation row - icon + translation on same line */}
+        <Text className="self-end pb-3 text-xs text-[#6D6F7B]">
           {isTypingComplete ? 'Tap ▶' : 'Tap to skip'}
         </Text>
-      </View>
+      </Pressable>
     </View>
   );
 }

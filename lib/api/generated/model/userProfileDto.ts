@@ -5,6 +5,7 @@
  * The API description
  * OpenAPI spec version: 1.0
  */
+import type { UserProfileDtoLevel } from './userProfileDtoLevel';
 
 export interface UserProfileDto {
   id: number;
@@ -13,7 +14,7 @@ export interface UserProfileDto {
   name: string | null;
   /** @nullable */
   profileImage: string | null;
-  level: number;
-  exp: number;
+  level: UserProfileDtoLevel;
+  xp: number;
   streakDays: number;
 }

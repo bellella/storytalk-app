@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Href, Link } from 'expo-router';
 import { BookOpen, Moon } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView } from 'react-native';
@@ -17,10 +17,9 @@ type Category = {
   id: number;
   title: string;
   sub: string;
-  time: string;
   color: string;
   text: string;
-  icon: string;
+  href: Href;
 };
 
 type Story = {
@@ -29,7 +28,6 @@ type Story = {
   category: string;
   time: string;
   color: string;
-  icon: string;
 };
 
 type Novel = {
@@ -48,19 +46,17 @@ const CATEGORIES: Category[] = [
     id: 1,
     title: '기초 코스',
     sub: 'Course',
-    time: '3-10 min',
     color: 'bg-primary',
     text: 'text-white',
-    icon: '🌱',
+    href: '/units',
   },
   {
     id: 2,
     title: '휴식 모드',
     sub: 'Music',
-    time: '5-15 min',
     color: 'bg-[#FFDEA6]',
     text: 'text-[#3F414E]',
-    icon: '🎵',
+    href: '/units',
   },
 ];
 
@@ -85,39 +81,39 @@ export default function HomeScreen() {
         {/* ---------- Categories ---------- */}
         <View className="mb-8 flex-row gap-4">
           {CATEGORIES.map((cat) => (
-            <View
-              key={cat.id}
-              className={`${cat.color} h-52 flex-1 rounded-[20px] p-5 shadow-sm`}
-            >
-              <View className="absolute right-4 top-4 opacity-80">
-                <Text className="text-3xl">{cat.icon}</Text>
-              </View>
+            <Link href={cat.href} key={cat.id} asChild>
+              <Pressable
+                key={cat.id}
+                className={`${cat.color} h-52 flex-1 rounded-[20px] p-5`}
+              >
+                <View className="absolute right-4 top-4 opacity-80">
+                  <Text className="text-3xl">{cat.icon}</Text>
+                </View>
 
-              <View>
-                <Text className={`text-xl font-bold ${cat.text}`}>
-                  {cat.title}
-                </Text>
-                <Text
-                  className={`text-xs font-bold uppercase opacity-70 ${cat.text}`}
-                >
-                  {cat.sub}
-                </Text>
-              </View>
+                <View>
+                  <Text className={`text-xl font-bold ${cat.text}`}>
+                    {cat.title}
+                  </Text>
+                  <Text
+                    className={`text-xs font-bold uppercase opacity-70 ${cat.text}`}
+                  >
+                    {cat.sub}
+                  </Text>
+                </View>
 
-              <View className="mt-auto flex-row items-center justify-between">
-                <Text className={`text-[10px] font-medium ${cat.text}`}>
-                  {cat.time}
-                </Text>
+                <View className="mt-auto flex-row items-center justify-between">
+                  <Text className={`text-[10px] font-medium ${cat.text}`}>
+                    {cat.time}
+                  </Text>
 
-                <Link href={`/course/${cat.id}`} asChild>
                   <Pressable className="rounded-full bg-[#EBEAEC] px-4 py-2">
                     <Text className="text-[10px] font-black uppercase text-[#3F414E]">
-                      Start
+                      Start Now
                     </Text>
                   </Pressable>
-                </Link>
-              </View>
-            </View>
+                </View>
+              </Pressable>
+            </Link>
           ))}
         </View>
 

@@ -5,6 +5,7 @@
  * The API description
  * OpenAPI spec version: 1.0
  */
+import type { StoryDetailDtoLevel } from './storyDetailDtoLevel';
 import type { StoryDetailDtoCharactersItem } from './storyDetailDtoCharactersItem';
 import type { StoryDetailDtoEpisodesItem } from './storyDetailDtoEpisodesItem';
 
@@ -14,7 +15,7 @@ export interface StoryDetailDto {
   description?: string;
   coverImage?: string;
   category: string;
-  difficulty: number;
+  level: StoryDetailDtoLevel;
   status: string;
   totalEpisodes: number;
   likeCount: number;

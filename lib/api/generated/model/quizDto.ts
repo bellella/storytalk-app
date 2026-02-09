@@ -5,18 +5,20 @@
  * The API description
  * OpenAPI spec version: 1.0
  */
-import type { QuizOptionDto } from './quizOptionDto';
+import type { QuizDtoSourceType } from './quizDtoSourceType';
+import type { QuizDtoType } from './quizDtoType';
+import type { QuizDtoData } from './quizDtoData';
 
 export interface QuizDto {
+  sourceType: QuizDtoSourceType;
+  type: QuizDtoType;
+  data?: QuizDtoData;
   id: number;
-  sourceType: string;
   sourceId: number;
-  type: string;
   questionEnglish: string;
   questionKorean?: string;
-  answerIndex: number;
+  answerIndex?: number;
   description?: string;
   order?: number;
   isActive: boolean;
-  options: QuizOptionDto[];
 }
