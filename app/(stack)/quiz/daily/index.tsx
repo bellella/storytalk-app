@@ -1,31 +1,47 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import LottieView from 'lottie-react-native';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
-import { ModalHeader } from '@/components/app/ModalHeader';
+import {
+  LottieOverlay,
+  LottieOverlayRef,
+} from '@/components/app/LottieOverlay';
+import { ModalContainer } from '@/components/app/modal-container';
+import { QuizHeader } from '@/components/quiz/QuizHeader';
 import { SentenceBuildQuiz } from '@/components/quiz/SentenceBuildQuiz';
 import { SentenceClozeQuiz } from '@/components/quiz/SentenceClozeQuiz';
-import { Box } from '@/components/ui/box';
+import { SentenceFeedback } from '@/components/quiz/SentenceFeedback';
+import { SpeakRepeatQuiz } from '@/components/quiz/SpeakRepeatQuiz';
+import type { QuizHandle } from '@/components/quiz/types';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { VStack } from '@/components/ui/vstack';
 import {
   QuizDtoType,
+  SentenceBuildDataDto,
+  SentenceClozeDataDto,
+  SpeakRepeatDataDto,
   StartQuizSessionDtoType,
 } from '@/lib/api/generated/model';
 import { useQuiz } from '@/lib/hooks/quiz/useQuiz';
+import { useSound } from '@/lib/hooks/useSound';
+import { DailyQuizResult } from '@/types/result.type';
 
 export default function DailyQuizScreen() {
   const router = useRouter();
-  const { quizzes, isLoading, answerQuiz, completeQuiz } = useQuiz(
+  const { isReview } = useLocalSearchParams();
+  const { quizzes, isLoading, answerQuiz, completeDailyQuiz } = useQuiz(
     StartQuizSessionDtoType.DAILY_QUIZ
   );
-  s;
 
   const [quizIdx, setQuizIdx] = useState(0);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [showHint, setShowHint] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [canSubmit, setCanSubmit] = useState(false);
+  const quizRef = useRef<QuizHandle>(null);
+  const lottieRef = useRef<LottieOverlayRef>(null);
+  const correctSound = useSound(require('@/assets/audio/correct.mp3'));
+
+  const isAnswered = isCorrect !== null;
 
   if (isLoading) {
     return (
@@ -62,105 +78,147 @@ export default function DailyQuizScreen() {
   }
 
   const currentQuiz = quizzes[quizIdx];
-  const progress = ((quizIdx + 1) / quizzes.length) * 100;
+  const isLast = quizIdx === quizzes.length - 1;
 
-  const canProceed = isCorrect !== null;
-
-  // submit answer button handler
   const handleQuizAnswer = (
     correct: boolean,
     payload: Record<string, unknown>
   ) => {
     setIsCorrect(correct);
-    answerQuiz({
-      quizId: currentQuiz.id,
-      payload,
-      isCorrect: correct,
-    });
+    if (correct) {
+      lottieRef.current?.play();
+      correctSound.play();
+    }
+    if (isReview) {
+      correct && setCorrectCount((p) => p + 1);
+    } else {
+      answerQuiz({
+        quizId: currentQuiz.id,
+        payload,
+        isCorrect: correct,
+      });
+    }
   };
 
-  // next quiz button handler
   const handleNextQuiz = () => {
-    if (quizIdx === quizzes.length - 1) {
+    if (isLast) {
       finishQuiz();
     } else {
       setQuizIdx((p) => p + 1);
       setIsCorrect(null);
+      setCanSubmit(false);
     }
   };
 
-  const finishQuiz = () => {
-    completeQuiz();
-    router.replace('/quiz/daily/result');
+  const handleSubmit = () => {
+    quizRef.current?.submit();
+  };
+
+  const finishQuiz = async () => {
+    let resultObject: DailyQuizResult | undefined;
+    if (!isReview) {
+      const dailyQuizResult = await completeDailyQuiz();
+      resultObject = {
+        quiz: dailyQuizResult.result,
+        xp: dailyQuizResult.xp,
+      };
+    } else {
+      resultObject = {
+        quiz: {
+          score: (correctCount / quizzes.length) * 100,
+          totalCount: quizzes.length,
+          correctCount: correctCount,
+        },
+      };
+    }
+    router.replace({
+      pathname: '/quiz/daily/result',
+      params: {
+        result: JSON.stringify(resultObject),
+      },
+    });
   };
 
   const renderQuizBody = () => {
     if (currentQuiz.type === QuizDtoType.SENTENCE_BUILD) {
       return (
         <SentenceBuildQuiz
+          ref={quizRef}
           key={currentQuiz.id}
-          data={currentQuiz.data}
+          data={currentQuiz.data as SentenceBuildDataDto}
           onAnswer={handleQuizAnswer}
+          onCanSubmitChange={setCanSubmit}
         />
       );
     }
     if (currentQuiz.type === QuizDtoType.SENTENCE_CLOZE_BUILD) {
       return (
         <SentenceClozeQuiz
+          ref={quizRef}
           key={currentQuiz.id}
-          data={currentQuiz.data}
+          data={currentQuiz.data as SentenceClozeDataDto}
           onAnswer={handleQuizAnswer}
+          onCanSubmitChange={setCanSubmit}
         />
       );
     }
-    return (
-      <Box className="mb-8 rounded-2xl bg-yellow-50 p-4">
-        <Text className="font-bold text-yellow-700">
-          Unsupported quiz type: {currentQuiz.type}
-        </Text>
-      </Box>
-    );
+    if (currentQuiz.type === QuizDtoType.SPEAK_REPEAT) {
+      return (
+        <SpeakRepeatQuiz
+          ref={quizRef}
+          key={currentQuiz.id}
+          data={currentQuiz.data as SpeakRepeatDataDto}
+          onAnswer={handleQuizAnswer}
+          onCanSubmitChange={setCanSubmit}
+        />
+      );
+    }
   };
 
   return (
     <>
-      <LottieView autoPlay source={require('@/assets/lotties/confetti.json')} />
-      <ModalHeader onClose={() => router.back()} />
-      <View className="mx-auto max-w-[600px] flex-1 p-4">
-        <VStack className="flex-1">
-          {/* Question */}
-          <Box className="mb-6">
-            <Box className="mb-3 self-start rounded-full bg-[#8E97FD]/10 px-3 py-1">
-              <Text className="text-[10px] font-black uppercase tracking-widest text-[#8E97FD]">
-                {currentQuiz.type.replace('_', ' ')}
-              </Text>
-            </Box>
-
-            <Text className="text-xl font-bold leading-tight text-[#3F414E]">
-              {currentQuiz.questionKorean}
-            </Text>
-          </Box>
-          {/* Quiz Body */}
+      <LottieOverlay
+        ref={lottieRef}
+        source={require('@/assets/lotties/test1.json')}
+      />
+      <ModalContainer>
+        <View className="flex-1 pb-24">
+          <QuizHeader
+            type={currentQuiz.type}
+            question={currentQuiz.questionKorean ?? ''}
+            description={currentQuiz.description ?? ''}
+          />
           {renderQuizBody()}
-          {/* Bottom Actions */}
-          <Box className="mt-auto gap-3">
-            {/* Next button */}
-            <Button
-              onPress={handleNextQuiz}
-              isDisabled={!canProceed}
-              className={`w-full rounded-[22px] ${
-                canProceed ? 'bg-[#8E97FD]' : 'bg-gray-200'
-              }`}
-            >
-              <ButtonText className="font-bold text-white">
-                {quizIdx === quizzes.length - 1
-                  ? 'Finish Learning'
-                  : 'Next Question'}
-              </ButtonText>
-            </Button>
-          </Box>
-        </VStack>
-      </View>
+        </View>
+
+        {/* 하단 고정: 피드백 + 버튼 */}
+        <View className="absolute bottom-0 left-0 right-0 px-5 pb-8 pt-3">
+          {isAnswered && (
+            <SentenceFeedback
+              isCorrect={isCorrect}
+              questionEnglish={currentQuiz.questionEnglish}
+              explanation={currentQuiz.description}
+            />
+          )}
+          <Button
+            onPress={isAnswered ? handleNextQuiz : handleSubmit}
+            isDisabled={!isAnswered && !canSubmit}
+            className={`mt-3 w-full rounded-xl ${
+              isAnswered
+                ? isCorrect
+                  ? 'bg-[#4CAF50]'
+                  : 'bg-[#EF5350]'
+                : canSubmit
+                  ? 'bg-[#8E97FD]'
+                  : 'bg-gray-200'
+            }`}
+          >
+            <ButtonText className="font-bold text-white">
+              {isAnswered ? (isLast ? '학습 완료' : '다음 문제') : '제출하기'}
+            </ButtonText>
+          </Button>
+        </View>
+      </ModalContainer>
     </>
   );
 }

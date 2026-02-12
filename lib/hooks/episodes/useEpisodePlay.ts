@@ -26,9 +26,20 @@ export function useEpisodePlay(episodeId: number, lastSceneId?: number) {
 
   const lastSceneIdResult = lastSceneId ?? startMutation.data?.lastSceneId;
 
-  const isNew = lastSceneIdResult === undefined;
+  const isCompleted = startMutation?.data?.isCompleted;
 
-  const isReady = episodeQuery.isSuccess;
+  // episode 데이터 + lastSceneId 기반으로 시작 씬 인덱스 계산
+  const initialSceneIndex = useMemo(() => {
+    const scenes = episodeQuery.data?.scenes;
+    if (!scenes?.length) return undefined;
+    // start 중이면 아직 lastSceneId를 모르니까 대기
+    if (!lastSceneId && startMutation.isPending) return undefined;
+    if (!lastSceneIdResult) return 0;
+    const idx = scenes.findIndex((s) => s.id === lastSceneIdResult);
+    return idx >= 0 ? idx : 0;
+  }, [episodeQuery.data?.scenes, lastSceneIdResult, lastSceneId, startMutation.isPending]);
+
+  const isReady = episodeQuery.isSuccess && initialSceneIndex !== undefined;
 
   return useMemo(
     () => ({
@@ -37,7 +48,7 @@ export function useEpisodePlay(episodeId: number, lastSceneId?: number) {
       episode: episodeQuery.data,
       episodeQuery,
 
-      lastSceneId: lastSceneIdResult,
+      initialSceneIndex: initialSceneIndex ?? 0,
       updateEpisodeProgress: updateEpisodeProgressMutation.mutateAsync,
       completeEpisode: completeEpisodeMutation.mutateAsync,
       // 상태
@@ -46,6 +57,7 @@ export function useEpisodePlay(episodeId: number, lastSceneId?: number) {
       isEpisodeLoading: episodeQuery.isLoading,
       episodeError: episodeQuery.error,
       isReady,
+      isCompleted,
     }),
     [
       episodeId,
@@ -55,6 +67,7 @@ export function useEpisodePlay(episodeId: number, lastSceneId?: number) {
       episodeQuery.error,
       startMutation.isPending,
       startMutation.error,
+      initialSceneIndex,
       isReady,
     ]
   );

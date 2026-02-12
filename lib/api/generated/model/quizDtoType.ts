@@ -13,4 +13,5 @@ export type QuizDtoType = typeof QuizDtoType[keyof typeof QuizDtoType];
 export const QuizDtoType = {
   SENTENCE_BUILD: 'SENTENCE_BUILD',
   SENTENCE_CLOZE_BUILD: 'SENTENCE_CLOZE_BUILD',
+  SPEAK_REPEAT: 'SPEAK_REPEAT',
 } as const;

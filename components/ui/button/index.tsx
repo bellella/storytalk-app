@@ -56,6 +56,8 @@ const buttonStyle = tva({
       outline:
         'bg-transparent border data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent',
       solid: '',
+      outlineChip: 'rounded-full bg-transparent border border-primary',
+      solidChip: 'rounded-full bg-primary',
     },
 
     size: {
@@ -95,7 +97,7 @@ const buttonStyle = tva({
       action: 'primary',
       variant: 'outline',
       class:
-        'bg-transparent data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent',
+        'bg-transparent border-primary data-[hover=true]:bg-background-50 data-[active=true]:bg-transparent',
     },
     {
       action: 'secondary',
@@ -119,7 +121,7 @@ const buttonStyle = tva({
 });
 
 const buttonTextStyle = tva({
-  base: 'font-semibold web:select-none text-sm text-white',
+  base: 'font-semibold web:select-none text-sm',
   parentVariants: {
     action: {
       primary:
@@ -133,9 +135,11 @@ const buttonTextStyle = tva({
     },
     variant: {
       link: 'data-[hover=true]:underline data-[active=true]:underline',
-      outline: '',
+      outline: 'text-primary',
       solid:
         'text-typography-0 data-[hover=true]:text-typography-0 data-[active=true]:text-typography-0',
+      outlineChip: 'text-primary',
+      solidChip: 'text-white',
     },
     size: {
       xs: 'text-xs',

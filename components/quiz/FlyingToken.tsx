@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
+  Easing,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Easing,
 } from 'react-native-reanimated';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
@@ -48,11 +48,7 @@ export function FlyingToken({
     const y = from.y + (to.y - from.y) * progress.value;
 
     return {
-      transform: [
-        { translateX: x },
-        { translateY: y },
-        { scale: scale.value },
-      ],
+      transform: [{ translateX: x }, { translateY: y }, { scale: scale.value }],
     };
   });
 
@@ -61,8 +57,8 @@ export function FlyingToken({
       style={[styles.container, animatedStyle]}
       pointerEvents="none"
     >
-      <Box className="rounded-2xl bg-primary px-4 py-3">
-        <Text className="font-bold text-white">{text}</Text>
+      <Box className="rounded-xl bg-primary px-3 py-2">
+        <Text className="text-sm font-bold text-white">{text}</Text>
       </Box>
     </Animated.View>
   );

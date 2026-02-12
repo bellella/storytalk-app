@@ -12,7 +12,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 // Configure Google Sign-In for native platforms
 GoogleSignin.configure({
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
   iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
   scopes: ['profile', 'email'],
 });

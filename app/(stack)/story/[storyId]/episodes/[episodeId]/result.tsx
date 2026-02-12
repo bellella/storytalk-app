@@ -1,83 +1,147 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Text, View } from 'react-native';
-import { AppContainer } from '@/components/app/app-container';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
+import { useRef, useState } from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import {
+  LottieOverlay,
+  LottieOverlayRef,
+} from '@/components/app/LottieOverlay';
 import { FloatingContainer } from '@/components/common/FloatingContainer';
+import { LevelUpBanner } from '@/components/result/LevelUpBanner';
+import { QuizScoreHeader } from '@/components/result/QuizScoreHeader';
+import { XpProgressCard } from '@/components/result/XpProgressCard';
 import { Button, ButtonText } from '@/components/ui/button';
-import { HStack } from '@/components/ui/hstack';
+import { EpisodeRewardDtoType } from '@/lib/api/generated/model';
 import { EpisodeResult } from '@/types/result.type';
 
+const REWARD_ICONS: Record<string, string> = {
+  [EpisodeRewardDtoType.CHARACTER_UNLOCK]: '👤',
+  [EpisodeRewardDtoType.ITEM]: '🎁',
+};
+
 export default function EpisodeResultScreen() {
-  const { result: resultJson } = useLocalSearchParams();
+  const { storyId, episodeId, result: resultJson } = useLocalSearchParams();
   const result: EpisodeResult = JSON.parse((resultJson as string) || '{}');
-  const quiz = result.quiz;
-  const xp = result.xp;
-  const episode = result.episode;
-  const rewards = result.rewards;
+  const { quiz, xp, episode, rewards } = result;
   const router = useRouter();
+  const lottieRef = useRef<LottieOverlayRef>(null);
+  const [showLevelUp, setShowLevelUp] = useState(false);
 
   return (
     <>
-      <AppContainer showBackButton>
-        <View className="flex-1 px-5 pt-3">
-          {/* Header */}
-          <Text className="text-xs font-extrabold uppercase tracking-widest text-[#8E97FD]">
-            결과
-          </Text>
-          <Text className="mt-1 text-3xl font-extrabold text-[#3F414E]">
-            {quiz.score}점
-          </Text>
-          <Text className="mt-2 text-sm font-semibold text-[#6D6F7B]"></Text>
-
-          {/* EXP Card */}
-          <View className="mt-6 rounded-[28px] bg-white px-6 py-5 shadow-sm shadow-black/5">
-            <View className="flex-row items-center justify-between">
-              <Text className="text-sm font-bold text-[#3F414E]">
-                경험치 획득
-              </Text>
-              <Text className="text-sm font-extrabold text-[#8E97FD]">
-                +{xp.xpGranted} EXP
-              </Text>
-            </View>
-
-            {xp.requiredTotalXp && (
-              <View className="mt-3 h-2 w-full rounded-full bg-[#ECECF4]">
-                <View
-                  className="h-full rounded-full bg-[#8E97FD]"
-                  style={{
-                    width: `${(xp.totalXp / xp.requiredTotalXp) * 100}%`,
-                  }}
-                />
+      <LottieOverlay
+        ref={lottieRef}
+        source={require('@/assets/lotties/confetti.json')}
+        loop
+      />
+      <View className="flex-1 bg-[#FBF8FF]">
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: 120 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Episode info chip */}
+          {episode && (
+            <Animated.View entering={FadeInDown.duration(500)}>
+              <View className="items-center pt-6">
+                <View className="rounded-full bg-[#ECECF4] px-4 py-1.5">
+                  <Text className="text-xs font-bold text-[#454652]">
+                    "{episode.storyTitle}" EP.{episode.episodeOrder}
+                  </Text>
+                </View>
               </View>
-            )}
+            </Animated.View>
+          )}
 
-            <View className="mt-2 flex-row justify-between">
-              <Text className="text-xs font-medium text-[#A1A4B2]">
-                Lv.{xp.currentLevel}
-              </Text>
-              <Text className="text-xs font-medium text-[#A1A4B2]">
-                다음 레벨까지 {xp.xpToNextLevel ?? 0} EXP
-              </Text>
-            </View>
+          {/* Score header */}
+          <QuizScoreHeader
+            quiz={quiz}
+            title="Episode Complete!"
+            subtitle={episode?.episodeTitle}
+          />
+
+          {/* XP Card */}
+          <View className="mt-4 px-4">
+            <XpProgressCard
+              xp={xp}
+              onLevelUpAnimationStart={() => {
+                lottieRef.current?.play();
+                setShowLevelUp(true);
+              }}
+            />
           </View>
 
-          {/* Summary */}
-          <Text className="mt-6 text-sm font-bold text-[#3F414E]">
-            정답 {quiz.correctCount} / {quiz.totalCount}개
-          </Text>
+          {/* Level Up Banner */}
+          {xp.leveledUp && (
+            <View className="mt-4 px-4">
+              <LevelUpBanner
+                previousLevel={xp.previousLevel}
+                currentLevel={xp.currentLevel}
+                visible={showLevelUp}
+              />
+            </View>
+          )}
 
-          {/* Bottom CTA */}
-        </View>
-      </AppContainer>
+          {/* Rewards */}
+          {rewards && rewards.length > 0 && (
+            <Animated.View entering={FadeInDown.delay(600).duration(500)}>
+              <View className="mt-4 px-4">
+                <View className="mx-1 rounded-3xl bg-white px-6 py-5 shadow-sm shadow-black/10">
+                  <View className="flex-row items-center gap-2">
+                    <Text className="text-sm">🎉</Text>
+                    <Text className="text-base font-bold text-[#1B1B21]">
+                      Rewards
+                    </Text>
+                  </View>
+                  <View className="mt-3 gap-2.5">
+                    {rewards.map((reward) => (
+                      <View
+                        key={reward.id}
+                        className="flex-row items-center gap-3 rounded-2xl bg-[#F5F2FB] px-4 py-3"
+                      >
+                        <View className="h-10 w-10 items-center justify-center rounded-xl bg-white">
+                          <Text className="text-lg">
+                            {REWARD_ICONS[reward.type] ?? '✨'}
+                          </Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-xs font-bold uppercase tracking-wider text-[#8E97FD]">
+                            {reward.type.replace('_', ' ')}
+                          </Text>
+                          <Text className="text-sm font-semibold text-[#1B1B21]">
+                            {(reward.payload as { name?: string })?.name ??
+                              'New Reward'}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </Animated.View>
+          )}
+        </ScrollView>
+      </View>
+
+      {/* Bottom CTA */}
       <FloatingContainer>
-        <HStack space="md">
-          <Button onPress={() => router.replace('./review')}>
-            <ButtonText>리뷰 & 퀴즈 다시풀기</ButtonText>
+        <View className="flex-row gap-3">
+          <Button
+            onPress={() => router.replace('./review')}
+            className="flex-1 rounded-2xl bg-[#ECECF4] py-4"
+          >
+            <ButtonText className="font-bold text-[#454652]">Review</ButtonText>
           </Button>
-
-          <Button onPress={() => router.replace('../quiz')}>
-            <ButtonText>다음화 계속하기</ButtonText>
-          </Button>
-        </HStack>
+          <Link
+            replace
+            href={`/story/${storyId}/episodes/${episodeId}`}
+            asChild
+          >
+            <Button className="flex-[2] rounded-2xl bg-[#8E97FD] py-4">
+              <ButtonText className="font-bold text-white">Continue</ButtonText>
+            </Button>
+          </Link>
+        </View>
       </FloatingContainer>
     </>
   );

@@ -26,10 +26,7 @@ export default function RootLayout() {
     <GluestackUIProvider mode={colorScheme}>
       <ThemeProvider value={expoTheme[colorScheme]}>
         <QueryClientProvider client={queryClient}>
-          <SafeAreaView
-            edges={['top', 'bottom']}
-            className="flex-1 bg-background"
-          >
+          <SafeAreaView edges={['top']} className="flex-1 bg-background">
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="(stack)" options={{ headerShown: false }} />

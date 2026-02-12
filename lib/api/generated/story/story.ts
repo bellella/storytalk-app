@@ -8,7 +8,8 @@
 import type {
   StoriesResponseDto,
   StoryControllerGetStoriesParams,
-  StoryDetailDto
+  StoryDetailDto,
+  TagItemDto
 } from '.././model';
 
 import { customInstance } from '../../axios-client';
@@ -26,6 +27,14 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
     },
       options);
     }
+  export const storyGetTags = (
+    
+ options?: SecondParameter<typeof customInstance<TagItemDto[]>>,) => {
+      return customInstance<TagItemDto[]>(
+      {url: `/api/stories/tags`, method: 'GET'
+    },
+      options);
+    }
   export const storyGetStoryDetail = (
     id: number,
  options?: SecondParameter<typeof customInstance<StoryDetailDto>>,) => {
@@ -35,4 +44,5 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
       options);
     }
   export type StoryGetStoriesResult = NonNullable<Awaited<ReturnType<typeof storyGetStories>>>
+export type StoryGetTagsResult = NonNullable<Awaited<ReturnType<typeof storyGetTags>>>
 export type StoryGetStoryDetailResult = NonNullable<Awaited<ReturnType<typeof storyGetStoryDetail>>>

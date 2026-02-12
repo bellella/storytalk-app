@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0
  */
 import type { UserProfileDtoLevel } from './userProfileDtoLevel';
+import type { DailyStatusDto } from './dailyStatusDto';
 
 export interface UserProfileDto {
   id: number;
@@ -17,4 +18,5 @@ export interface UserProfileDto {
   level: UserProfileDtoLevel;
   xp: number;
   streakDays: number;
+  dailyStatus: DailyStatusDto;
 }

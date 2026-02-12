@@ -8,6 +8,7 @@ import {
   SubmitQuizAnswerDtoPayload,
 } from '@/lib/api/generated/model';
 import {
+  quizCompleteDailyQuiz,
   quizCompleteSession,
   quizGetDailyQuiz,
   quizStartSession,
@@ -44,6 +45,7 @@ export function useQuiz(
     0;
   const answerQuizMutation = useAnswerQuiz(quizSessionId);
   const completeQuizMutation = useCompleteQuiz(quizSessionId);
+  const completeDailyQuizMutation = useCompleteDailyQuiz(quizSessionId);
   return {
     quizzes: (data as DailyQuizResponseDto)?.quizzes
       ? (data as DailyQuizResponseDto).quizzes
@@ -51,6 +53,7 @@ export function useQuiz(
     isLoading,
     answerQuiz: answerQuizMutation.mutateAsync,
     completeQuiz: completeQuizMutation.mutateAsync,
+    completeDailyQuiz: completeDailyQuizMutation.mutateAsync,
   };
 }
 
@@ -91,6 +94,18 @@ export function useCompleteQuiz(quizSessionId: number) {
         throw new Error('Quiz session ID is required');
       }
       const response = await quizCompleteSession(quizSessionId);
+      return response;
+    },
+  });
+}
+
+export function useCompleteDailyQuiz(quizSessionId: number) {
+  return useMutation({
+    mutationFn: async () => {
+      if (!quizSessionId) {
+        throw new Error('Quiz session ID is required');
+      }
+      const response = await quizCompleteDailyQuiz(quizSessionId);
       return response;
     },
   });

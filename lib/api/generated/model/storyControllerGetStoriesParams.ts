@@ -25,4 +25,8 @@ Default is 10.
  * @nullable
  */
 limit?: number | null;
+/**
+ * 필터링할 태그 slug (옵셔널)
+ */
+tag?: string;
 };

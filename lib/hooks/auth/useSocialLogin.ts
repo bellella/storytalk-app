@@ -32,11 +32,10 @@ export const useSocialLogin = (): SocialLoginHook => {
       await GoogleSignin.hasPlayServices();
       const { data } = await GoogleSignin.signIn();
       if (!data?.idToken) {
-        throw new Error('Failed to get Google access token.');
+        throw new Error('Failed to get Google ID token.');
       }
-      // Get access token from Google Sign-In
-      const tokens = await GoogleSignin.getTokens();
-      const res = await authGoogleLogin({ idToken: tokens.accessToken });
+      console.log('data.idToken', data.idToken);
+      const res = await authGoogleLogin({ idToken: data.idToken });
       login(res);
     } catch (err) {
       console.error('Google login error', err);

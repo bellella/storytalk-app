@@ -8,4 +8,5 @@
 
 export interface SuccessResponseDto {
   success: boolean;
+  message?: string;
 }

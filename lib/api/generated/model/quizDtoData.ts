@@ -5,5 +5,8 @@
  * The API description
  * OpenAPI spec version: 1.0
  */
+import type { SentenceBuildDataDto } from './sentenceBuildDataDto';
+import type { SentenceClozeDataDto } from './sentenceClozeDataDto';
+import type { SpeakRepeatDataDto } from './speakRepeatDataDto';
 
-export type QuizDtoData = { [key: string]: unknown };
+export type QuizDtoData = SentenceBuildDataDto | SentenceClozeDataDto | SpeakRepeatDataDto;

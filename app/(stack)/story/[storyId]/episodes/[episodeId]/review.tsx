@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Bookmark, Volume2 } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, View } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
 import { ModalHeader } from '@/components/app/ModalHeader';
 import {
@@ -51,16 +51,14 @@ export default function EpisodeReviewScreen() {
   return (
     <>
       <ModalHeader onClose={() => router.back()} />
-      <Box className="flex-1">
+      <SafeAreaView edges={['bottom']} className="flex-1">
         {/* Header */}
-        <Box className="border-b border-[#EBEAEC] px-6 py-4">
-          <Text className="text-center text-lg font-bold text-[#3F414E]">
-            Review
-          </Text>
-          <Text className="mt-1 text-center text-sm text-[#A1A4B2]">
-            Episode {episodeId} - {dialogs.length} sentences
-          </Text>
-        </Box>
+        <Text className="text-center text-lg font-bold text-[#3F414E]">
+          Review
+        </Text>
+        <Text className="mt-1 text-center text-sm text-[#A1A4B2]">
+          Episode {episodeId} - {dialogs.length} sentences
+        </Text>
 
         {/* Review Items List */}
         <ScrollView
@@ -153,7 +151,7 @@ export default function EpisodeReviewScreen() {
             <ButtonText className="font-bold text-white">Start Quiz</ButtonText>
           </Button>
         </Box>
-      </Box>
+      </SafeAreaView>
     </>
   );
 }

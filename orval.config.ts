@@ -5,7 +5,18 @@ export default defineConfig({
     input: {
       target: 'http://localhost:3000/api/docs-json',
       filters: {
-        tags: ['Story', 'Episode', 'Auth', 'User', 'Unit', 'Quiz'],
+        tags: [
+          'Story',
+          'Episode',
+          'Auth',
+          'User',
+          'Unit',
+          'Quiz',
+          'Chat',
+          'Ai',
+          'Friend',
+          'Character',
+        ],
       },
     },
     output: {

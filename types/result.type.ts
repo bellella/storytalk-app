@@ -14,5 +14,5 @@ export interface EpisodeResult {
 
 export interface DailyQuizResult {
   quiz: QuizScoreDto;
-  xp: XpProgressDto;
+  xp?: XpProgressDto;
 }

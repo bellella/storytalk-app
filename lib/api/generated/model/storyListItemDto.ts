@@ -12,7 +12,6 @@ export interface StoryListItemDto {
   title: string;
   description?: string;
   coverImage?: string;
-  category: string;
   level: StoryListItemDtoLevel;
   status: string;
   totalEpisodes: number;

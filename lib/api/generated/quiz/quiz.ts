@@ -12,7 +12,6 @@ import type {
   QuizScoreDto,
   QuizSessionResponseDto,
   StartQuizSessionDto,
-  SubmitDailyQuizDto,
   SubmitQuizAnswerDto
 } from '.././model';
 
@@ -61,12 +60,9 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
     }
   export const quizCompleteDailyQuiz = (
     sessionId: number,
-    submitDailyQuizDto: SubmitDailyQuizDto,
  options?: SecondParameter<typeof customInstance<DailyQuizCompleteResponseDto | DailyQuizCompleteResponseDto>>,) => {
       return customInstance<DailyQuizCompleteResponseDto | DailyQuizCompleteResponseDto>(
-      {url: `/api/quiz/sessions/${sessionId}/daily/complete`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: submitDailyQuizDto
+      {url: `/api/quiz/sessions/${sessionId}/daily/complete`, method: 'POST'
     },
       options);
     }

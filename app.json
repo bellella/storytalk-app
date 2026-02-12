@@ -14,7 +14,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.minacoco.storytalk",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSMicrophoneUsageDescription": "음성 인식을 위해 마이크 권한이 필요합니다.",
+        "NSSpeechRecognitionUsageDescription": "발음 테스트를 위해 음성 인식을 사용합니다."
       }
     },
     "android": {
@@ -26,7 +28,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.minacoco.storytalk"
+      "package": "com.minacoco.storytalk",
+      "permissions": ["RECORD_AUDIO"]
     },
     "web": {
       "output": "static",
@@ -52,9 +55,7 @@
           "iosUrlScheme": "com.googleusercontent.apps.844014056331-qu5eieejkkusrr776iiip1umebkj796f"
         }
       ],
-      [
-        "expo-apple-authentication"
-      ],
+      ["expo-apple-authentication"],
       [
         "@react-native-seoul/naver-login",
         {

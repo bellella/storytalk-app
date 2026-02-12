@@ -1,45 +1,21 @@
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { Pressable, ScrollView } from 'react-native';
 import { AppContainer } from '@/components/app/app-container';
+import { CharacterAvatar } from '@/components/chat/CharacterAvatar';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/ui/text';
+import { friendGetFriends } from '@/lib/api/generated/friend/friend';
 
 export default function ChatsScreen() {
-  const friends = [
-    { id: 1, name: 'Anna', img: '👩‍🦰', online: true },
-    { id: 2, name: 'Jake', img: '👱‍♂️', online: true },
-    { id: 3, name: 'Sera', img: '👩', online: false },
-    { id: 4, name: 'Kevin', img: '👨‍🦱', online: true },
-    { id: 5, name: 'Liam', img: '👦', online: false },
-  ];
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['friends'],
+    queryFn: () => friendGetFriends(),
+  });
 
-  const messages = [
-    {
-      id: 1,
-      name: 'Anna',
-      lastMsg: '오늘 공부한 표현 정말 유용했어!',
-      time: '14:20',
-      unread: 2,
-      img: '👩‍🦰',
-    },
-    {
-      id: 2,
-      name: 'Jake',
-      lastMsg: '오디션 스토리 다 끝냈어? 🎤',
-      time: '12:05',
-      unread: 0,
-      img: '👱‍♂️',
-    },
-    {
-      id: 3,
-      name: 'StoryLingo Bot',
-      lastMsg: '새로운 스토리가 업데이트 되었습니다!',
-      time: '어제',
-      unread: 0,
-      img: '🦉',
-    },
-  ];
+  const friends = data ?? [];
+  const chatFriends = friends.filter((f) => f.chatId != null);
 
   return (
     <AppContainer showHeaderLogo>
@@ -61,17 +37,15 @@ export default function ChatsScreen() {
         >
           {friends.map((friend) => (
             <Box
-              key={friend.id}
+              key={friend.characterId}
               className="flex min-w-[60px] flex-col items-center gap-2"
             >
-              <Box className="relative">
-                <Box className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EBEAEC] text-2xl">
-                  <Text>{friend.img}</Text>
-                </Box>
-                {friend.online && (
-                  <Box className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-[#58CC02]" />
-                )}
-              </Box>
+              <CharacterAvatar
+                name={friend.name}
+                avatarImage={friend.avatarImage}
+                showUnreadDot={friend.unreadCount > 0}
+                avatarClassName="h-14 w-14 text-2xl"
+              />
               <Text className="text-xs font-bold text-[#3F414E]">
                 {friend.name}
               </Text>
@@ -82,37 +56,66 @@ export default function ChatsScreen() {
 
       {/* Chat list */}
       <Box className="space-y-2 px-6">
-        {messages.map((msg) => (
-          <Link key={msg.id} href={`/chats/${msg.id}`} asChild>
-            <Pressable className="flex flex-row items-center gap-4 rounded-[25px] p-4 active:bg-[#F5F5F9]">
-              <Box className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#EBEAEC] bg-[#F5F5F9] text-2xl">
-                <Text>{msg.img}</Text>
-              </Box>
-              <Box className="flex-1">
-                <Box className="mb-1 flex-row items-center justify-between">
-                  <Text className="font-bold text-[#3F414E]">{msg.name}</Text>
-                  <Text className="text-[10px] font-medium text-[#A1A4B2]">
-                    {msg.time}
+        {isLoading && (
+          <Text className="py-4 text-center text-xs text-[#A1A4B2]">
+            채팅 목록을 불러오는 중이에요...
+          </Text>
+        )}
+        {isError && (
+          <Text className="py-4 text-center text-xs text-red-500">
+            채팅 목록을 불러오지 못했어요. 잠시 후 다시 시도해주세요.
+          </Text>
+        )}
+        {!isLoading &&
+          !isError &&
+          chatFriends.map((friend) => (
+            <Link
+              key={friend.chatId ?? friend.characterId}
+              href={{
+                pathname: '/chats/[id]',
+                params: {
+                  id: String(friend.characterId),
+                  chatId: friend.chatId ? String(friend.chatId) : undefined,
+                  name: friend.name,
+                },
+              }}
+              asChild
+            >
+              <Pressable className="flex flex-row items-center gap-4 rounded-[25px] p-4 active:bg-[#F5F5F9]">
+                <CharacterAvatar
+                  name={friend.name}
+                  avatarImage={friend.avatarImage}
+                  avatarClassName="h-14 w-14 border border-[#EBEAEC] bg-[#F5F5F9] text-2xl"
+                />
+                <Box className="flex-1">
+                  <Box className="mb-1 flex-row items-center justify-between">
+                    <Text className="font-bold text-[#3F414E]">
+                      {friend.name}
+                    </Text>
+                    <Text className="text-[10px] font-medium text-[#A1A4B2]">
+                      {friend.lastMessageAt
+                        ? friend.lastMessageAt.slice(11, 16)
+                        : ''}
+                    </Text>
+                  </Box>
+                  <Text
+                    numberOfLines={1}
+                    className="max-w-[180px] truncate text-sm text-[#A1A4B2]"
+                  >
+                    {friend.lastMessagePreview ?? ''}
                   </Text>
                 </Box>
-                <Text
-                  numberOfLines={1}
-                  className="max-w-[180px] truncate text-sm text-[#A1A4B2]"
-                >
-                  {msg.lastMsg}
-                </Text>
-              </Box>
 
-              {msg.unread > 0 && (
-                <Box className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8E97FD]">
-                  <Text className="text-[10px] font-bold text-white">
-                    {msg.unread}
-                  </Text>
-                </Box>
-              )}
-            </Pressable>
-          </Link>
-        ))}
+                {friend.unreadCount > 0 && (
+                  <Box className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8E97FD]">
+                    <Text className="text-[10px] font-bold text-white">
+                      {friend.unreadCount}
+                    </Text>
+                  </Box>
+                )}
+              </Pressable>
+            </Link>
+          ))}
       </Box>
     </AppContainer>
   );

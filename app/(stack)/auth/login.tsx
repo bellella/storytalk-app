@@ -5,13 +5,8 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { useSocialLogin } from '@/lib/hooks/auth/useSocialLogin';
 
 export default function SocialLoginScreen() {
-  const {
-    user,
-    loginWithGoogle,
-    loginWithApple,
-    loginWithKakao,
-    loginWithNaver,
-  } = useSocialLogin();
+  const { loginWithGoogle, loginWithApple, loginWithKakao, loginWithNaver } =
+    useSocialLogin();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
